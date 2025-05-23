@@ -3,6 +3,7 @@ import { Image, StyleSheet, View, useColorScheme } from 'react-native';
 import { ParallaxScrollView } from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -11,7 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Colors } from '@/constants/Colors';
 import { client } from '@/constants/thirdweb';
+import { Plus } from 'lucide-react-native';
 import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { baseSepolia } from 'thirdweb/chains';
@@ -114,6 +117,26 @@ export default function HomeScreen() {
           </SelectGroup>
         </SelectContent>
       </Select>
+
+      <View
+        className="absolute bottom-4 right-4 w-16 h-16 rounded-full items-center justify-center"
+        style={{
+          shadowColor: 'rgba(255, 69, 0, 0.9)',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.9,
+          shadowRadius: 14,
+          elevation: 16,
+        }}>
+        <Button
+          className="w-16 h-16 rounded-full items-center justify-center"
+          variant="default"
+          size="icon"
+          onPress={() => {
+            // your action here
+          }}>
+          <Plus size={32} fill={Colors.dark.icon} />
+        </Button>
+      </View>
     </ParallaxScrollView>
   );
 }
