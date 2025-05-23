@@ -112,7 +112,7 @@ function DropdownMenuContent({
         className={overlayClassName}>
         <DropdownMenuPrimitive.Content
           className={cn(
-            'z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-secondary p-1 shadow-md shadow-foreground/5',
+            'z-50 min-w-[8rem] overflow-hidden rounded-md border border-border p-1 shadow-md shadow-foreground/5',
             open
               ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
               : 'web:animate-out web:fade-out-0 web:zoom-out-95',
@@ -215,7 +215,7 @@ function DropdownMenuLabel({
   return (
     <DropdownMenuPrimitive.Label
       className={cn(
-        'px-2 py-1.5 text-sm native:text-base font-semibold text-foreground web:cursor-default text-right', // <-- Added text-right here
+        'px-2 py-1.5 text-sm native:text-base font-semibold text-foreground web:cursor-default text-left',
         inset && 'pl-8',
         className,
       )}

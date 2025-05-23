@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/Colors';
-import { ChevronDown, ChevronUp, SortDesc } from 'lucide-react-native';
+import { ChevronDown, SortAsc, SortDesc } from 'lucide-react-native';
 import { useState } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 
@@ -30,56 +30,61 @@ export default function EmbersScreen() {
     }
   };
 
-  const renderChevron = (field: SortField) => {
-    if (field !== sortField) return null;
-    return sortDirection === 'asc' ? (
-      <ChevronUp size={16} className="ml-1" color={Colors.dark.tabIconSelected} />
-    ) : (
-      <ChevronDown size={16} className="ml-1" color={Colors.dark.tabIconSelected} />
-    );
-  };
-
   return (
     <SafeAreaView className="bg-background flex-1">
-      <Text className="text-xl font-bold text-foreground text-center p-2">Embers</Text>
+      <Text className="text-xl font-bold text-foreground text-center py-2">Embers</Text>
+
+      <View className="w-full p-4">
+        <SearchBar />
+      </View>
+
+      <View className="flex-row gap-2 px-4 items-center">
+        <Button variant="ghost" size="icon" onPress={() => toggleDirection(sortField)}>
+          {sortDirection === 'asc' ? (
+            <SortDesc size={20} color={Colors.dark.icon} />
+          ) : (
+            <SortAsc size={20} color={Colors.dark.icon} />
+          )}
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="default"
+              className="flex-row items-center gap-2 w-[170px] justify-between">
+              <Text className="text-sm text-white truncate">
+                {sortField === 'date' ? '🗓️ Date joined' : '🔥 XP'}
+              </Text>
+              <ChevronDown size={20} color={Colors.dark.icon} />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent className="w-[170px] bg-transparent border-none">
+            <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onPress={() => toggleDirection('date')}>
+              <Text
+                className={`text-sm ${
+                  sortField === 'date' ? 'font-semibold text-primary' : 'text-white'
+                }`}>
+                🗓️ Date joined
+              </Text>
+            </DropdownMenuItem>
+            <DropdownMenuItem onPress={() => toggleDirection('xp')}>
+              <Text
+                className={`text-sm ${
+                  sortField === 'xp' ? 'font-semibold text-primary' : 'text-white'
+                }`}>
+                🔥 XP
+              </Text>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
-        <View className="flex-1 gap-10">
-          <View className="w-full flex-row justify-between items-center">
-            {/* Search-bar input */}
-            <View className="w-[70%]">
-              <SearchBar />
-            </View>
-
-            {/* Add some horizontal space between */}
-            <View className="w-[5%]" />
-
-            {/* Dropdown menu for sorting */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="p-2 rounded-full">
-                  <SortDesc size={20} color={Colors.dark.icon} />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[50%]">
-                <DropdownMenuLabel>Sort By</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onPress={() => toggleDirection('date')}>
-                  <View className="flex-row items-center w-full">
-                    <Text>🗓️ Date joined</Text>
-                    <View className="ml-auto">{renderChevron('date')}</View>
-                  </View>
-                </DropdownMenuItem>
-                <DropdownMenuItem onPress={() => toggleDirection('xp')}>
-                  <View className="flex-row items-center w-full">
-                    <Text>🔥 XP</Text>
-                    <View className="ml-auto">{renderChevron('xp')}</View>
-                  </View>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </View>
-        </View>
+        <View className="flex-1 gap-10">{/* TODO: Profiles */}</View>
       </ScrollView>
     </SafeAreaView>
   );
