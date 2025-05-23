@@ -11,7 +11,7 @@ type GetChallengeResponse = {
   };
 };
 
-export default function useGraphService(active: boolean = false) {
+export default function useGraphService() {
   const getChallenge = async (id: string) => {
     const query = `query GetChallenge($id: String!) {
         challenge(id: $id) {
@@ -53,10 +53,10 @@ export default function useGraphService(active: boolean = false) {
       challenges: Challenge[];
     };
   }
-  const getChallenges = async () => {
+  const getChallenges = async (active: boolean = false) => {
     const query = `
     query GetChallenges {
-        challenges${active ? '(where: { status: Active })' : ''} {
+        challenges${active ? '(where: { status_eq: Active })' : ''} {
             id
             amount
             blockNumber

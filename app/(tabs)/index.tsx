@@ -64,6 +64,11 @@ export default function HomeScreen() {
             )
           );
         }}
+        ListEmptyComponent={() => (
+          <Text className="text-foreground text-lg text-center font-semibold">
+            No challenges available.
+          </Text>
+        )}
       />
       <Button
         className="absolute bottom-8 right-4 w-16 h-16 rounded-full items-center justify-center"
