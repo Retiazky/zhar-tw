@@ -11,10 +11,16 @@ type Props = {
 export const ModalHeader = (props: Props) => {
   return (
     <View className="flex items-center">
-      <View className="flex-row items-center justify-between w-full px-4 py-2">
-        {props.leftIcon && <Button onPress={props.onLeftIconPress}>{props.leftIcon}</Button>}
-        <Text className="text-lg text-black">{props.title}</Text>
-        <View />
+      <View className="flex-row items-center justify-between w-full p-4">
+        {props.leftIcon ? (
+          <Button onPress={props.onLeftIconPress} variant="ghost" className="w-12">
+            {props.leftIcon}
+          </Button>
+        ) : (
+          <View className="w-12" />
+        )}
+        <Text className="text-xl font-bold text-foreground text-center flex-1">{props.title}</Text>
+        <View className="w-12" />
       </View>
       <View></View>
       <View className="bottom-0">
