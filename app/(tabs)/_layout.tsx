@@ -52,19 +52,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(hidden)/read"
+        name="hidden/read"
         options={{
           href: null,
         }}
       />
       <Tabs.Screen
-        name="(hidden)/write"
+        name="hidden/write"
         options={{
           href: null,
         }}
       />
       <Tabs.Screen
-        name="challenges/[id]"
+        name="challenges"
         options={{
           href: null,
         }}

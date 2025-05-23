@@ -36,7 +36,9 @@ export default function HomeScreen() {
       <View className="w-full justify-between px-4 flex-row flex items-center">
         <View className="w-[40px]" />
         <Text className="text-2xl text-foreground font-bold">Challenges</Text>
-        <TouchableOpacity className="flex items-center justify-center p-[8px]">
+        <TouchableOpacity
+          onPress={() => router.push('/challenges/active')}
+          className="flex items-center justify-center p-[8px]">
           <FlameIcon
             size={24}
             color={hasActiveChallenges ? Colors.dark.tabIconSelected : Colors.dark.tabIconDefault}
@@ -62,7 +64,7 @@ export default function HomeScreen() {
         variant="default"
         size="icon"
         onPress={() => {
-          router.push('/create');
+          router.push('/challenges/create');
         }}>
         <Plus size={32} fill={Colors.dark.icon} />
       </Button>
