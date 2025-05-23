@@ -1,8 +1,10 @@
 import ChallengeCard from '@/components/ChallengeCard';
+import { Button } from '@/components/ui/button';
 import { Colors } from '@/constants/Colors';
 import { MOCKED_CHALLENGES } from '@/constants/mocks';
 import { Challenge } from '@/types/challenge';
-import { FlameIcon } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { FlameIcon, Plus } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { useActiveAccount } from 'thirdweb/react';
@@ -48,6 +50,22 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderChallenge}
       />
+
+      <Button
+        className="absolute bottom-8 right-4 w-16 h-16 rounded-full items-center justify-center"
+        style={{
+          shadowColor: 'rgba(255, 69, 0, 0.9)',
+          shadowOpacity: 0.9,
+          shadowRadius: 14,
+          elevation: 16,
+        }}
+        variant="default"
+        size="icon"
+        onPress={() => {
+          router.push('/create');
+        }}>
+        <Plus size={32} fill={Colors.dark.icon} />
+      </Button>
     </SafeAreaView>
   );
 }
