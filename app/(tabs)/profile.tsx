@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Text } from '@/components/ui/text';
 import { client } from '@/constants/thirdweb';
+import { ProfileChallengeStatus } from '@/types/challenge';
 import { useState } from 'react';
 import { Image, SafeAreaView, ScrollView, View } from 'react-native';
 import { baseSepolia } from 'thirdweb/chains';
@@ -39,7 +40,7 @@ const WALLETS = [
 export default function ProfileScreen() {
   const account = useActiveAccount();
 
-  const [value, setValue] = useState<'ignited' | 'stoked' | 'active' | 'completed'>('ignited');
+  const [value, setValue] = useState<ProfileChallengeStatus>('ignited');
 
   return (
     <SafeAreaView className="bg-background flex-1">
@@ -85,7 +86,7 @@ export default function ProfileScreen() {
                 <Text className="text-foreground text-lg font-semibold">Challenges</Text>
                 <Tabs
                   value={value}
-                  onValueChange={setValue}
+                  onValueChange={(val) => setValue(val as ProfileChallengeStatus)}
                   className="w-full mx-auto flex-col gap-1.5">
                   <TabsList className="flex-row w-full gap-4">
                     <TabsTrigger value="ignited">Ignited</TabsTrigger>

@@ -26,6 +26,8 @@ export type ChallengeStatus =
   | 'Expired'
   | 'Failed';
 
+export type ProfileChallengeStatus = 'ignited' | 'stoked' | 'active' | 'completed';
+
 export interface Challenge {
   id: string;
   amount: number;
