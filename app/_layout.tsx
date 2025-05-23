@@ -16,7 +16,7 @@ import { Colors } from '../constants/Colors';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-colorScheme.set('light');
+colorScheme.set('dark');
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -41,7 +41,6 @@ export default function RootLayout() {
           <StatusBar backgroundColor={Colors.dark.background} barStyle="light-content" />
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
           </Stack>
           <PortalHost />
         </ThemeProvider>

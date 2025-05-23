@@ -7,5 +7,8 @@ module.exports = defineConfig([
   eslintPluginPrettierRecommended,
   {
     ignores: ['dist/*'],
+    rules: {
+      'react-hooks/exhaustive-deps': 'off',
+    },
   },
 ]);

@@ -36,6 +36,7 @@
 		"@thirdweb-dev/react-native-adapter": "^1.5.4",
 		"@walletconnect/react-native-compat": "^2.20.1",
 		"amazon-cognito-identity-js": "^6.3.15",
+		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"ethers": "^6.13.7",
 		"expo": "53.0.9",

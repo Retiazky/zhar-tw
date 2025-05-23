@@ -1,56 +1,65 @@
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Tabs } from "expo-router";
-import React from "react";
-import { useActiveAccount } from "thirdweb/react";
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Tabs } from 'expo-router';
+import React, { useMemo } from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const account = useActiveAccount();
+
+  const theme = useMemo(() => Colors[colorScheme ?? 'light'], [colorScheme]);
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: theme.tabIconSelected,
+        tabBarInactiveTintColor: theme.tabIconDefault,
         headerShown: false,
-      }}
-    >
+        tabBarInactiveBackgroundColor: theme.background,
+        tabBarActiveBackgroundColor: theme.background,
+      }}>
+      <Tabs.Screen
+        name="(hidden)/read"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="(hidden)/write"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="create"
+        options={{
+          href: null,
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
-          title: "Connect",
+          title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "wallet" : "wallet-outline"}
-              color={color}
-            />
+            <TabBarIcon name={focused ? 'flame' : 'flame-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="read"
+        name="users"
         options={{
-          href: account ? "/read" : null,
-          title: "Read",
+          title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "reader" : "reader-outline"}
-              color={color}
-            />
+            <TabBarIcon name={focused ? 'people' : 'people-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="write"
+        name="profile"
         options={{
-          title: "Write",
-          href: account ? "/write" : null,
+          title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
+            <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
         }}
       />
