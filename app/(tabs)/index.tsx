@@ -2,6 +2,7 @@ import ChallengeCard from '@/components/ChallengeCard';
 import { Button } from '@/components/ui/button';
 import { Colors } from '@/constants/Colors';
 import useGraphService from '@/hooks/services/useGraphService';
+import { parseDescription } from '@/lib/parser';
 import { Challenge } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -23,10 +24,11 @@ export default function HomeScreen() {
   }, [data]);
 
   const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
+    const { title } = parseDescription(item.description);
     return (
       <ChallengeCard
         id={item.id}
-        title={item.id}
+        title={title}
         expiresAt={new Date(item.expiration)}
         xp={item.volume}
         staked={item.volume}

@@ -27,6 +27,12 @@ export default function CreateChallengeScreen() {
             <Text className="text-primary font-bold">Ignation</Text>, and decide when the flame
             burns out.
           </Text>
+          <LabeledInput
+            label="📝 Title"
+            placeholder="Short description of the challenge"
+            value=""
+            onChangeText={() => {}}
+          />
           <LabeledTextarea
             label="📝 Description"
             placeholder="Run 10km in under 50 minutes."
