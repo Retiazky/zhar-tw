@@ -22,12 +22,6 @@ export default function TabLayout() {
         },
       }}>
       <Tabs.Screen
-        name="create"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
         name="index"
         options={{
           title: '',
@@ -62,12 +56,6 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="hidden/write"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="challenges"
         options={{
           href: null,
         }}
