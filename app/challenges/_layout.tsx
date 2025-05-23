@@ -6,8 +6,14 @@ export default function ChallengeLayout() {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="create" />
+      <Stack.Screen
+        name="create"
+        options={{
+          animation: 'slide_from_bottom',
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen name="active" />
       <Stack.Screen name="[id]" />
     </Stack>
   );
