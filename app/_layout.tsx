@@ -41,6 +41,13 @@ export default function RootLayout() {
           <StatusBar backgroundColor={Colors.dark.background} barStyle="light-content" />
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="challenges"
+              options={{
+                headerShown: false,
+                presentation: 'modal',
+              }}
+            />
           </Stack>
           <PortalHost />
         </ThemeProvider>
