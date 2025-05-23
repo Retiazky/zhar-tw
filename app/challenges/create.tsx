@@ -1,3 +1,4 @@
+import { LabeledDatePicker } from '@/components/LabeledDatePicker';
 import { LabeledInput } from '@/components/LabeledInput';
 import { LabeledTextarea } from '@/components/LabeledTextArea';
 import { ModalHeader } from '@/components/ModalHeader';
@@ -6,9 +7,11 @@ import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import { X } from 'lucide-react-native';
+import { useState } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 
 export default function CreateChallengeScreen() {
+  const [date, setDate] = useState<Date>(new Date());
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -46,12 +49,11 @@ export default function CreateChallengeScreen() {
             value=""
             onChangeText={() => {}}
           />
-          <LabeledInput
+          <LabeledDatePicker
             label="⏳ Expire Date"
-            placeholder="30/05/2025"
             bottomNote="This is the deadline for the Zharrior to submit their proof."
-            value=""
-            onChangeText={() => {}}
+            value={date}
+            onChange={setDate}
           />
         </View>
         <View className="p-4 bottom-0">

@@ -14,7 +14,7 @@ type Props = {
 export const LabeledTextarea = (props: Props) => {
   return (
     <View className="gap-2">
-      <Label className="text-foreground text-lg font-bold text-primary">{props.label}</Label>
+      <Label className="text-foreground text-lg font-bold">{props.label}</Label>
       <Textarea aria-labelledby="textareaLabel" placeholder={props.placeholder} />
       {props.bottomNote && (
         <Text className="text-sm text-muted-foreground">{props.bottomNote}</Text>
