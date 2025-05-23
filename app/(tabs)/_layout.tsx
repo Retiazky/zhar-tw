@@ -60,12 +60,6 @@ export default function TabLayout() {
           href: null,
         }}
       />
-      <Tabs.Screen
-        name="challenges"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }
