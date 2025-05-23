@@ -72,7 +72,7 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(
-        'z-50 min-w-[8rem] overflow-hidden rounded-md border border-border mt-1 bg-popover p-1 shadow-md shadow-foreground/5 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        'z-50 min-w-[8rem] overflow-hidden rounded-md border border-primary mt-1 bg-popover p-1 shadow-md shadow-foreground/5 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         open
           ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
           : 'web:animate-out web:fade-out-0 web:zoom-out',
@@ -112,7 +112,7 @@ function DropdownMenuContent({
         className={overlayClassName}>
         <DropdownMenuPrimitive.Content
           className={cn(
-            'z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 shadow-md shadow-foreground/5 web:data-[side=bottom]:slide-in-from-top-2 web:data-[side=left]:slide-in-from-right-2 web:data-[side=right]:slide-in-from-left-2 web:data-[side=top]:slide-in-from-bottom-2',
+            'z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-secondary p-1 shadow-md shadow-foreground/5',
             open
               ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
               : 'web:animate-out web:fade-out-0 web:zoom-out-95',
@@ -215,7 +215,7 @@ function DropdownMenuLabel({
   return (
     <DropdownMenuPrimitive.Label
       className={cn(
-        'px-2 py-1.5 text-sm native:text-base font-semibold text-foreground web:cursor-default',
+        'px-2 py-1.5 text-sm native:text-base font-semibold text-foreground web:cursor-default text-right', // <-- Added text-right here
         inset && 'pl-8',
         className,
       )}
@@ -232,7 +232,7 @@ function DropdownMenuSeparator({
 }) {
   return (
     <DropdownMenuPrimitive.Separator
-      className={cn('-mx-1 my-1 h-px bg-border', className)}
+      className={cn('-mx-1 my-1 h-px bg-primary', className)}
       {...props}
     />
   );
