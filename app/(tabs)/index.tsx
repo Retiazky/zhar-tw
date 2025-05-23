@@ -1,32 +1,36 @@
 import ChallengeCard from '@/components/ChallengeCard';
 import { Button } from '@/components/ui/button';
 import { Colors } from '@/constants/Colors';
-import { MOCKED_CHALLENGES } from '@/constants/mocks';
+import useGraphService from '@/hooks/services/useGraphService';
 import { Challenge } from '@/types/challenge';
+import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { FlameIcon, Plus } from 'lucide-react-native';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import { useActiveAccount } from 'thirdweb/react';
 
 export default function HomeScreen() {
-  const account = useActiveAccount();
+  const graphService = useGraphService();
 
-  const [challenges, setChallenges] = useState(MOCKED_CHALLENGES);
+  const { data, error } = useQuery({
+    queryKey: ['challenges'],
+    queryFn: async () => await graphService.getChallenges(),
+    retry: false,
+  });
 
-  const hasActiveChallenges = useMemo(
-    () => challenges.some((challenge) => !challenge.fulfilled),
-    [challenges],
-  );
+  const hasActiveChallenges = useMemo(() => {
+    console.log('data', data);
+    return data?.challenges.some((challenge) => challenge.status === 'Active');
+  }, [data]);
 
   const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
     return (
       <ChallengeCard
         id={item.id}
-        title={item.title}
-        expiresAt={item.expiresAt}
-        xp={item.xp}
-        staked={item.staked}
+        title={item.id}
+        expiresAt={new Date(item.expiration)}
+        xp={item.volume}
+        staked={item.volume}
       />
     );
   }, []);
@@ -48,9 +52,18 @@ export default function HomeScreen() {
       </View>
       <FlatList
         contentContainerStyle={{ gap: 10 }}
-        data={challenges}
+        data={data?.challenges}
         keyExtractor={(item) => item.id}
         renderItem={renderChallenge}
+        ListHeaderComponent={() => {
+          return error ? (
+            <Text className="text-foreground text-lg font-semibold">
+              Error loading challenges: {error.message}
+            </Text>
+          ) : (
+            <Text className="text-foreground text-lg font-semibold">Active Challenges</Text>
+          );
+        }}
       />
 
       <Button

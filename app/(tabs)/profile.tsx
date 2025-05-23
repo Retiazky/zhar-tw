@@ -39,7 +39,7 @@ export default function UsersScreen() {
   const account = useActiveAccount();
   const theme = useColorScheme();
   return (
-    <SafeAreaView className="bg-background flex-1 flex flex-col gap-2 p-2">
+    <SafeAreaView className="bg-background flex-1 flex flex-col items-center gap-2 p-2">
       <View className="w-full justify-between px-4 flex-row flex items-center">
         <TouchableOpacity
           onPress={() => router.back()}
@@ -49,7 +49,10 @@ export default function UsersScreen() {
         <Text className="text-2xl text-foreground font-normal">Profile</Text>
         <View className="w-[40px]" />
       </View>
-      <Image source={require('@/assets/images/zhar-clear.png')} className="w-full h-40" />
+
+      <View className="flex items-center  justify-center rounded-full bg-foreground/10 p-1">
+        <Image source={require('@/assets/images/zhar-clear.png')} className="w-40 h-40" />
+      </View>
       {!account && (
         <View className="flex-1 items-center justify-center">
           <Text className="text-foreground text-lg font-semibold">
@@ -57,12 +60,14 @@ export default function UsersScreen() {
           </Text>
         </View>
       )}
-      <ConnectButton
-        client={client}
-        theme={theme || 'dark'}
-        wallets={WALLETS}
-        chain={baseSepolia}
-      />
+      <View className="w-11/12">
+        <ConnectButton
+          client={client}
+          theme={theme || 'dark'}
+          wallets={WALLETS}
+          chain={baseSepolia}
+        />
+      </View>
     </SafeAreaView>
   );
 }

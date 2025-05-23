@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { ThirdwebProvider } from 'thirdweb/react';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { colorScheme } from 'nativewind';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,6 +18,7 @@ import { Colors } from '../constants/Colors';
 SplashScreen.preventAutoHideAsync();
 
 colorScheme.set('dark');
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -35,23 +37,25 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <ThirdwebProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <StatusBar backgroundColor={Colors.dark.background} barStyle="light-content" />
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="challenges"
-              options={{
-                headerShown: false,
-                presentation: 'modal',
-              }}
-            />
-          </Stack>
-          <PortalHost />
-        </ThemeProvider>
-      </ThirdwebProvider>
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <ThirdwebProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <StatusBar backgroundColor={Colors.dark.background} barStyle="light-content" />
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="challenges"
+                options={{
+                  headerShown: false,
+                  presentation: 'modal',
+                }}
+              />
+            </Stack>
+            <PortalHost />
+          </ThemeProvider>
+        </ThirdwebProvider>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }
