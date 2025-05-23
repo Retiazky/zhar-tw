@@ -55,12 +55,12 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderChallenge}
         ListHeaderComponent={() => {
-          return error ? (
-            <Text className="text-foreground text-lg font-semibold">
-              Error loading challenges: {error.message}
-            </Text>
-          ) : (
-            <Text className="text-foreground text-lg font-semibold">Active Challenges</Text>
+          return (
+            error && (
+              <Text className="text-foreground text-lg font-semibold">
+                Error loading challenges: {error.message}
+              </Text>
+            )
           );
         }}
       />
