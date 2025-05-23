@@ -17,6 +17,9 @@ export default function TabLayout() {
         headerShown: false,
         tabBarInactiveBackgroundColor: theme.background,
         tabBarActiveBackgroundColor: theme.background,
+        tabBarStyle: {
+          borderTopWidth: 1,
+        },
       }}>
       <Tabs.Screen
         name="create"
