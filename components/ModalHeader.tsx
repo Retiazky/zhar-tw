@@ -11,7 +11,7 @@ type Props = {
 export const ModalHeader = (props: Props) => {
   return (
     <View className="flex items-center">
-      <View className="flex-row items-center justify-between w-full p-4">
+      <View className="flex-row items-center justify-between w-full">
         {props.leftIcon ? (
           <Button onPress={props.onLeftIconPress} variant="ghost" className="w-12">
             {props.leftIcon}
