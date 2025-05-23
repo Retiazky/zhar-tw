@@ -5,61 +5,125 @@ const api = ofetch.create({
   baseURL: process.env.EXPO_PUBLIC_GQL_URL,
 });
 
-interface GraphResponse {
+type GetChallengeResponse = {
   data: {
-    challenges: Challenge[];
-    embers: Ember[];
+    challenge: Challenge;
   };
-}
+};
 
-export default function useGraphService() {
-  const getChallenges = async () => {
-    const query = `query GetChallenges {
-    challenges {
-        id
-        amount
-        blockNumber
-        description
-        contract
-        expiration
-        createdAt
-        depositCount
-        deposits {
-        amount
-        blockNumber
-        createdAt
-        id
-        txHash
-        }
-        status
-        updatedAt
-        uri
-        volume
-    }
-    embers {
-        id
-        createdAt
-        blockNumber
-        name
-        updatedAt
-        ignited {
+export default function useGraphService(active: boolean = false) {
+  const getChallenge = async (id: string) => {
+    const query = `query GetChallenge($id: String!) {
+        challenge(id: $id) {
             id
+            amount
+            blockNumber
+            description
+            contract
+            expiration
+            createdAt
+            depositCount
+            deposits {
+                amount
+                blockNumber
+                createdAt
+                id
+                txHash
+            }
+            status
+            updatedAt
+            uri
+            volume
         }
+        }}`;
+    try {
+      const resp = await api<GetChallengeResponse>('/graphql', {
+        method: 'POST',
+        body: { query, operationName: 'GetChallenge', variables: { id } },
+      });
+      return resp.data.challenge;
+    } catch (e) {
+      console.error('Error fetching challenge:', e);
+      throw e;
     }
+  };
+
+  interface GetChallengesResponse {
+    data: {
+      challenges: Challenge[];
+    };
+  }
+  const getChallenges = async () => {
+    const query = `
+    query GetChallenges {
+        challenges${active ? '(where: { status: Active })' : ''} {
+            id
+            amount
+            blockNumber
+            description
+            contract
+            expiration
+            createdAt
+            depositCount
+            deposits {
+                amount
+                blockNumber
+                createdAt
+                id
+                txHash
+            }
+            status
+            updatedAt
+            uri
+            volume
+        }
     }`;
     try {
-      const resp = await api<GraphResponse>('/graphql', {
+      const resp = await api<GetChallengesResponse>('/graphql', {
         method: 'POST',
         body: { query, operationName: 'GetChallenges', variables: null },
       });
-      return resp.data;
+      return resp.data.challenges;
     } catch (e) {
       console.error('Error fetching challenges:', e);
       throw e;
     }
   };
 
+  interface GetEmbersResponse {
+    data: {
+      embers: Ember[];
+    };
+  }
+
+  const getEmbers = async () => {
+    const query = `query GetEmbers {
+        embers {
+            id
+            createdAt
+            blockNumber
+            name
+            updatedAt
+            ignited {
+            id
+            }
+        }
+        }`;
+    try {
+      const resp = await api<GetEmbersResponse>('/graphql', {
+        method: 'POST',
+        body: { query, operationName: 'GetEmbers', variables: null },
+      });
+      return resp.data.embers;
+    } catch (e) {
+      console.error('Error fetching embers:', e);
+      throw e;
+    }
+  };
+
   return {
     getChallenges,
+    getChallenge,
+    getEmbers,
   };
 }

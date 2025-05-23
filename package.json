@@ -75,7 +75,8 @@
 		"tailwind-merge": "^3.3.0",
 		"tailwindcss": "^3.4.17",
 		"tailwindcss-animate": "^1.0.7",
-		"thirdweb": "5.96.7"
+		"thirdweb": "5.96.7",
+		"viem": "^2.30.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.27.1",

@@ -39,5 +39,5 @@ export interface Challenge {
   status: ChallengeStatus;
   updatedAt: string;
   uri: string;
-  volume: number;
+  volume: bigint;
 }
