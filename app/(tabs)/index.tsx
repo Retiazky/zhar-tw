@@ -102,10 +102,7 @@ export default function HomeScreen() {
 
       <Select defaultValue={item} onValueChange={setItem}>
         <SelectTrigger className="w-full bg-white">
-          <SelectValue
-            className="text-foreground text-sm native:text-lg"
-            placeholder="Select a fruit"
-          />
+          <SelectValue className="text-sm native:text-lg" placeholder="Select a fruit" />
         </SelectTrigger>
         <SelectContent insets={contentInsets} className="w-full">
           <SelectGroup>
