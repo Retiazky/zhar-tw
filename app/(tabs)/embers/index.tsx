@@ -41,12 +41,10 @@ export default function EmbersScreen() {
 
   return (
     <SafeAreaView className="bg-background flex-1">
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex-1 gap-10">
-          <Text className="text-xl font-bold text-foreground text-center">Embers</Text>
-        </View>
+      <Text className="text-xl font-bold text-foreground text-center p-2">Embers</Text>
 
-        <View className="flex-1 gap-10 p-4">
+      <ScrollView showsVerticalScrollIndicator={false} className="p-4">
+        <View className="flex-1 gap-10">
           <View className="w-full flex-row justify-between items-center">
             {/* Search-bar input */}
             <View className="w-[70%]">

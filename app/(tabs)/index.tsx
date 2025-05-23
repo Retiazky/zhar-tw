@@ -8,7 +8,14 @@ import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { FlameIcon, Plus } from 'lucide-react-native';
 import { useCallback, useMemo } from 'react';
-import { FlatList, ListRenderItem, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 
 export default function HomeScreen() {
   const graphService = useGraphService();
@@ -37,10 +44,9 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <SafeAreaView className="w-full bg-background flex-1">
-      <View className="w-full justify-between px-4 flex-row flex items-center">
-        <View className="w-[40px]" />
-        <Text className="text-2xl text-foreground font-bold">Challenges</Text>
+    <SafeAreaView className="bg-background flex-1">
+      <Text className="text-xl font-bold text-foreground text-center p-2">Challenges</Text>
+      <ScrollView showsVerticalScrollIndicator={false} className="p-4">
         <TouchableOpacity
           onPress={() => router.push('/challenges/active')}
           className="flex items-center justify-center p-[8px]">
@@ -50,23 +56,22 @@ export default function HomeScreen() {
             fill={hasActiveChallenges ? Colors.dark.tabIconSelected : undefined}
           />
         </TouchableOpacity>
-      </View>
-      <FlatList
-        contentContainerStyle={{ gap: 10 }}
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={renderChallenge}
-        ListHeaderComponent={() => {
-          return (
-            error && (
-              <Text className="text-foreground text-lg font-semibold">
-                Error loading challenges: {error.message}
-              </Text>
-            )
-          );
-        }}
-      />
-
+        <FlatList
+          contentContainerStyle={{ gap: 10 }}
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={renderChallenge}
+          ListHeaderComponent={() => {
+            return (
+              error && (
+                <Text className="text-foreground text-lg font-semibold">
+                  Error loading challenges: {error.message}
+                </Text>
+              )
+            );
+          }}
+        />
+      </ScrollView>
       <Button
         className="absolute bottom-8 right-4 w-16 h-16 rounded-full items-center justify-center"
         style={{
