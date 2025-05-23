@@ -23,11 +23,6 @@ export const ModalHeader = (props: Props) => {
         <View className="w-12" />
       </View>
       <View></View>
-      <View className="bottom-0">
-        <Button className="w-full " variant="default" onPress={props.onLeftIconPress}>
-          <Text className="text-md  text-black">Done</Text>
-        </Button>
-      </View>
     </View>
   );
 };
