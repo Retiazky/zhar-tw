@@ -1,5 +1,5 @@
 import { View } from 'react-native';
 
-export default function CreateChallengeScreen() {
+export default function ActiveChallengesScreen() {
   return <View></View>;
 }
