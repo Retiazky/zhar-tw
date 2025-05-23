@@ -1,0 +1,40 @@
+import { Challenge } from '@/types/challenge';
+
+export const MOCKED_CHALLENGES: Challenge[] = [
+  {
+    id: '1',
+    title: 'Challenge 1',
+    description: 'This is a test challenge',
+    fulfilled: false,
+    creator: '0x6698BF15bE0Abbdf4b0DcD60d97FcE7461DD9C1B',
+    solver: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    staked: 10_000,
+    xp: 100,
+    createdAt: new Date(),
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+  },
+  {
+    id: '2',
+    title: 'Challenge 1',
+    description: 'This is a test challenge',
+    fulfilled: false,
+    creator: '0x6698BF15bE0Abbdf4b0DcD60d97FcE7461DD9C1B',
+    solver: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    staked: 10_000,
+    xp: 100,
+    createdAt: new Date(),
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+  },
+  {
+    id: '3',
+    title: 'Challenge 1',
+    description: 'This is a test challenge',
+    fulfilled: false,
+    creator: '0x6698BF15bE0Abbdf4b0DcD60d97FcE7461DD9C1B',
+    solver: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    staked: 10_000,
+    xp: 100,
+    createdAt: new Date(),
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+  },
+];

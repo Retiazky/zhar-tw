@@ -1,160 +1,53 @@
-import { Image, StyleSheet, View, useColorScheme } from 'react-native';
+import ChallengeCard from '@/components/ChallengeCard';
+import { Colors } from '@/constants/Colors';
+import { MOCKED_CHALLENGES } from '@/constants/mocks';
+import { Challenge } from '@/types/challenge';
+import { FlameIcon } from 'lucide-react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { FlatList, ListRenderItem, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { useActiveAccount } from 'thirdweb/react';
 
-import { ParallaxScrollView } from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { client } from '@/constants/thirdweb';
-import { useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { baseSepolia } from 'thirdweb/chains';
-import { ConnectButton, useActiveAccount } from 'thirdweb/react';
-import { createWallet } from 'thirdweb/wallets';
-import { inAppWallet } from 'thirdweb/wallets/in-app';
-
-const wallets = [
-  inAppWallet({
-    auth: {
-      options: ['google', 'facebook', 'discord', 'telegram', 'email', 'phone', 'passkey'],
-      passkeyDomain: 'thirdweb.com',
-    },
-    smartAccount: {
-      chain: baseSepolia,
-      sponsorGas: true,
-    },
-  }),
-  createWallet('io.metamask'),
-  createWallet('com.coinbase.wallet', {
-    appMetadata: {
-      name: 'Thirdweb RN Demo',
-    },
-    mobileConfig: {
-      callbackURL: 'com.thirdweb.demo://',
-    },
-    walletConfig: {
-      options: 'smartWalletOnly',
-    },
-  }),
-  createWallet('me.rainbow'),
-  createWallet('com.trustwallet.app'),
-  createWallet('io.zerion.wallet'),
-];
-
-type Item = {
-  label: string;
-  value: string;
-};
-
-const items: Item[] = [
-  {
-    label: 'Test',
-    value: 'test',
-  },
-  {
-    label: 'Alpha',
-    value: 'alpha',
-  },
-];
 export default function HomeScreen() {
   const account = useActiveAccount();
-  console.log('account', account?.address);
-  const theme = useColorScheme();
 
-  const [item, setItem] = useState<Item>();
+  const [challenges, setChallenges] = useState(MOCKED_CHALLENGES);
 
-  const insets = useSafeAreaInsets();
-  const contentInsets = {
-    top: insets.top,
-    bottom: insets.bottom,
-    left: 32,
-    right: 32,
-  };
+  const hasActiveChallenges = useMemo(
+    () => challenges.some((challenge) => !challenge.fulfilled),
+    [challenges],
+  );
+
+  const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
+    return (
+      <ChallengeCard
+        id={item.id}
+        title={item.title}
+        expiresAt={item.expiresAt}
+        xp={item.xp}
+        staked={item.staked}
+      />
+    );
+  }, []);
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: 'white' }}
-      headerImage={
-        <Image source={require('@/assets/images/title.png')} style={styles.reactLogo} />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">{account ? 'Welcome to Zhar' : 'Logging In'}</ThemedText>
-      </ThemedView>
-      <View style={{ gap: 2 }}>
-        <ThemedText type="subtext">
-          {account
-            ? 'Your best on-chain challenge platform.'
-            : 'Connect your account to the app using one of the wallets below.'}
-        </ThemedText>
+    <SafeAreaView className="w-full bg-background flex-1">
+      <View className="w-full justify-between px-4 flex-row flex items-center">
+        <View className="w-[40px]" />
+        <Text className="text-2xl text-foreground font-bold">Challenges</Text>
+        <TouchableOpacity className="flex items-center justify-center p-[8px]">
+          <FlameIcon
+            size={24}
+            color={hasActiveChallenges ? Colors.dark.tabIconSelected : Colors.dark.tabIconDefault}
+            fill={hasActiveChallenges ? Colors.dark.tabIconSelected : undefined}
+          />
+        </TouchableOpacity>
       </View>
-      <ConnectButton
-        client={client}
-        theme={theme || 'dark'}
-        wallets={wallets}
-        chain={baseSepolia}
+      <FlatList
+        contentContainerStyle={{ gap: 10 }}
+        data={challenges}
+        keyExtractor={(item) => item.id}
+        renderItem={renderChallenge}
       />
-
-      <Select defaultValue={item} onValueChange={setItem}>
-        <SelectTrigger className="w-full bg-white">
-          <SelectValue className="text-sm native:text-lg" placeholder="Select a fruit" />
-        </SelectTrigger>
-        <SelectContent insets={contentInsets} className="w-full">
-          <SelectGroup>
-            {items.map((item) => (
-              <SelectItem key={item.value} label={item.label} value={item.value}>
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </ParallaxScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: '100%',
-    width: '100%',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 24,
-    justifyContent: 'space-evenly',
-  },
-  tableContainer: {
-    width: '100%',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  leftColumn: {
-    flex: 1,
-    textAlign: 'left',
-  },
-  rightColumn: {
-    flex: 1,
-    textAlign: 'right',
-  },
-});

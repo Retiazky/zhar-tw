@@ -19,18 +19,6 @@ export default function TabLayout() {
         tabBarActiveBackgroundColor: theme.background,
       }}>
       <Tabs.Screen
-        name="(hidden)/read"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="(hidden)/write"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
         name="create"
         options={{
           href: null,
@@ -61,6 +49,24 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="(hidden)/read"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="(hidden)/write"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="challenges/[id]"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
