@@ -19,8 +19,7 @@ export default function HomeScreen() {
   });
 
   const hasActiveChallenges = useMemo(() => {
-    console.log('data', data);
-    return data?.challenges.some((challenge) => challenge.status === 'Active');
+    return data?.some((challenge) => challenge.status === 'Active') ?? false;
   }, [data]);
 
   const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
@@ -52,16 +51,16 @@ export default function HomeScreen() {
       </View>
       <FlatList
         contentContainerStyle={{ gap: 10 }}
-        data={data?.challenges}
+        data={data}
         keyExtractor={(item) => item.id}
         renderItem={renderChallenge}
         ListHeaderComponent={() => {
-          return error ? (
-            <Text className="text-foreground text-lg font-semibold">
-              Error loading challenges: {error.message}
-            </Text>
-          ) : (
-            <Text className="text-foreground text-lg font-semibold">Active Challenges</Text>
+          return (
+            error && (
+              <Text className="text-foreground text-lg font-semibold">
+                Error loading challenges: {error.message}
+              </Text>
+            )
           );
         }}
       />

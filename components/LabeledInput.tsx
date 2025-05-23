@@ -14,7 +14,7 @@ type Props = {
 export const LabeledInput = (props: Props) => {
   return (
     <View className="gap-2">
-      <Label className="text-foreground text-lg font-bold text-primary">{props.label}</Label>
+      <Label className="text-foreground text-lg font-bold">{props.label}</Label>
       <Input
         placeholder={props.placeholder}
         value={props.value}
