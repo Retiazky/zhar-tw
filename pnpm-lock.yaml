@@ -110,9 +110,6 @@ importers:
       expo-font:
         specifier: 13.3.0
         version: 13.3.0(expo@53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0))(react@19.0.0)
-      expo-image:
-        specifier: ~2.1.7
-        version: 2.1.7(expo@53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0))(react-native-web@0.20.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0)
       expo-linking:
         specifier: 7.1.4
         version: 7.1.4(expo@53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0)
@@ -199,7 +196,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.17)
       thirdweb:
         specifier: 5.96.7
-        version: 5.96.7(663fb36d204f0eb22ad452236986d0f2)
+        version: 5.96.7(e93875525e0721a265e043ef2d545b18)
       viem:
         specifier: ^2.30.0
         version: 2.30.0(typescript@5.8.3)(zod@3.22.4)
@@ -1142,8 +1139,8 @@ packages:
     resolution: {integrity: sha512-yktiFZoWPtEW8QKS65eqKwA5MTKp88CyiL8q72WynrBs/73SAaxlSWlA2zW/DZlywZ5hX1OYzrCC0wFdvO9c2w==}
     engines: {node: '>= 16'}
 
-  '@hey-api/openapi-ts@0.67.5':
-    resolution: {integrity: sha512-fZd+3im0038rnK7W0mAfLTrdygCR/k6zq7XfYZj/wu0/3GvIg/aGlOwMUtZinRJBH21W+GoH0MJoce3BagVXsw==}
+  '@hey-api/openapi-ts@0.67.6':
+    resolution: {integrity: sha512-ywZggKKYieVjM6O6T60/Bl+QBRvhcKAov8dAIQor7reyKpFbEn3Ws+9WKoXR8QUuXN8AR8nMFjOuYPer5db/dg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=22.10.0}
     hasBin: true
     peerDependencies:
@@ -4231,17 +4228,6 @@ packages:
     peerDependencies:
       expo: '*'
       react: '*'
-
-  expo-image@2.1.7:
-    resolution: {integrity: sha512-p2Gr8fP/YakFHHo4rbpJbRWwKNrZp1GzSD91WEG3ZYAbTVdTjheJ6gUxXgggFaxEbaY+4WeQ0c5j9tZq8+3cEg==}
-    peerDependencies:
-      expo: '*'
-      react: '*'
-      react-native: '*'
-      react-native-web: '*'
-    peerDependenciesMeta:
-      react-native-web:
-        optional: true
 
   expo-json-utils@0.15.0:
     resolution: {integrity: sha512-duRT6oGl80IDzH2LD2yEFWNwGIC2WkozsB6HF3cDYNoNNdUvFk6uN3YiwsTsqVM/D0z6LEAQ01/SlYvN+Fw0JQ==}
@@ -7357,8 +7343,8 @@ packages:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
 
-  webpack-sources@3.2.3:
-    resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
+  webpack-sources@3.3.0:
+    resolution: {integrity: sha512-77R0RDmJfj9dyv5p3bM5pOHa+X8/ZkO9c7kpDstigkC4nIDobadsfSGCwB4bKhMVxqAok8tajaoR8rirM7+VFQ==}
     engines: {node: '>=10.13.0'}
 
   webpack@5.99.9:
@@ -8776,7 +8762,7 @@ snapshots:
 
   '@coinbase/wallet-sdk@4.3.0':
     dependencies:
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.7.2
       clsx: 1.2.1
       eventemitter3: 5.0.1
       preact: 10.26.6
@@ -9226,9 +9212,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.67.5(typescript@5.8.3))':
+  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.67.6(typescript@5.8.3))':
     dependencies:
-      '@hey-api/openapi-ts': 0.67.5(typescript@5.8.3)
+      '@hey-api/openapi-ts': 0.67.6(typescript@5.8.3)
 
   '@hey-api/json-schema-ref-parser@1.0.6':
     dependencies:
@@ -9237,7 +9223,7 @@ snapshots:
       js-yaml: 4.1.0
       lodash: 4.17.21
 
-  '@hey-api/openapi-ts@0.67.5(typescript@5.8.3)':
+  '@hey-api/openapi-ts@0.67.6(typescript@5.8.3)':
     dependencies:
       '@hey-api/json-schema-ref-parser': 1.0.6
       c12: 2.0.1
@@ -11116,9 +11102,9 @@ snapshots:
       '@tanstack/query-core': 5.76.2
       react: 19.0.0
 
-  '@thirdweb-dev/insight@1.0.0(@hey-api/openapi-ts@0.67.5(typescript@5.8.3))(typescript@5.8.3)':
+  '@thirdweb-dev/insight@1.0.0(@hey-api/openapi-ts@0.67.6(typescript@5.8.3))(typescript@5.8.3)':
     dependencies:
-      '@hey-api/client-fetch': 0.10.0(@hey-api/openapi-ts@0.67.5(typescript@5.8.3))
+      '@hey-api/client-fetch': 0.10.0(@hey-api/openapi-ts@0.67.6(typescript@5.8.3))
       tslib: 2.8.1
     optionalDependencies:
       typescript: 5.8.3
@@ -13477,14 +13463,6 @@ snapshots:
       fontfaceobserver: 2.3.0
       react: 19.0.0
 
-  expo-image@2.1.7(expo@53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0))(react-native-web@0.20.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0):
-    dependencies:
-      expo: 53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0)
-      react: 19.0.0
-      react-native: 0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)
-    optionalDependencies:
-      react-native-web: 0.20.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-
   expo-json-utils@0.15.0: {}
 
   expo-keep-awake@14.1.4(expo@53.0.9(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0))(react@19.0.0))(react@19.0.0):
@@ -15482,10 +15460,10 @@ snapshots:
   ox@0.6.7(typescript@5.8.3)(zod@3.22.4):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
+      '@noble/curves': 1.8.2
+      '@noble/hashes': 1.7.2
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
       abitype: 1.0.8(typescript@5.8.3)(zod@3.22.4)
       eventemitter3: 5.0.1
     optionalDependencies:
@@ -15496,10 +15474,10 @@ snapshots:
   ox@0.6.9(typescript@5.8.3)(zod@3.22.4):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
+      '@noble/curves': 1.8.2
+      '@noble/hashes': 1.7.2
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
       abitype: 1.0.8(typescript@5.8.3)(zod@3.22.4)
       eventemitter3: 5.0.1
     optionalDependencies:
@@ -15510,8 +15488,8 @@ snapshots:
   ox@0.7.0(typescript@5.8.3)(zod@3.22.4):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
+      '@noble/curves': 1.8.2
+      '@noble/hashes': 1.7.2
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.0.8(typescript@5.8.3)(zod@3.22.4)
@@ -16044,7 +16022,7 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       webpack: 5.99.9
-      webpack-sources: 3.2.3
+      webpack-sources: 3.3.0
 
   react-style-singleton@2.2.3(@types/react@19.1.5)(react@19.0.0):
     dependencies:
@@ -16702,7 +16680,7 @@ snapshots:
     dependencies:
       any-promise: 1.3.0
 
-  thirdweb@5.96.7(663fb36d204f0eb22ad452236986d0f2):
+  thirdweb@5.96.7(e93875525e0721a265e043ef2d545b18):
     dependencies:
       '@coinbase/wallet-sdk': 4.3.0
       '@emotion/react': 11.14.0(@types/react@19.1.5)(react@19.0.0)
@@ -16715,7 +16693,7 @@ snapshots:
       '@radix-ui/react-icons': 1.3.2(react@19.0.0)
       '@radix-ui/react-tooltip': 1.2.3(@types/react@19.1.5)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tanstack/react-query': 5.74.4(react@19.0.0)
-      '@thirdweb-dev/insight': 1.0.0(@hey-api/openapi-ts@0.67.5(typescript@5.8.3))(typescript@5.8.3)
+      '@thirdweb-dev/insight': 1.0.0(@hey-api/openapi-ts@0.67.6(typescript@5.8.3))(typescript@5.8.3)
       '@walletconnect/ethereum-provider': 2.20.1(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(@types/react@19.1.5)(react@19.0.0)(typescript@5.8.3)(zod@3.22.4)
       '@walletconnect/sign-client': 2.20.1(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.2(@babel/core@7.27.1)(@types/react@19.1.5)(react@19.0.0)))(typescript@5.8.3)(zod@3.22.4)
       abitype: 1.0.8(typescript@5.8.3)(zod@3.22.4)
@@ -17120,7 +17098,7 @@ snapshots:
 
   webidl-conversions@7.0.0: {}
 
-  webpack-sources@3.2.3: {}
+  webpack-sources@3.3.0: {}
 
   webpack@5.99.9:
     dependencies:
@@ -17147,7 +17125,7 @@ snapshots:
       tapable: 2.2.2
       terser-webpack-plugin: 5.3.14(webpack@5.99.9)
       watchpack: 2.4.4
-      webpack-sources: 3.2.3
+      webpack-sources: 3.3.0
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
