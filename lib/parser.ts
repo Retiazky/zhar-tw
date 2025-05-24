@@ -11,3 +11,10 @@ export const parseDescription = (description: string) => {
     description: rest.join('#$&').trim(),
   };
 };
+
+export const stringifyDescription = (title: string, description: string) => {
+  if (!title || !description) {
+    throw new Error('Title and description cannot be empty');
+  }
+  return `${title}#$&${description}`;
+};

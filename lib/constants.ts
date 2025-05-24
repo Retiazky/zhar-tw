@@ -1,3 +1,6 @@
+import { baseSepolia } from 'thirdweb/chains';
+import { createWallet, inAppWallet } from 'thirdweb/wallets';
+
 export const NAV_THEME = {
   light: {
     background: 'hsl(0 0% 100%)', // background
@@ -16,3 +19,31 @@ export const NAV_THEME = {
     text: 'hsl(0 0% 98%)', // foreground
   },
 };
+
+export const WALLETS = [
+  inAppWallet({
+    auth: {
+      options: ['google', 'facebook', 'discord', 'telegram', 'email', 'phone', 'passkey'],
+      passkeyDomain: 'thirdweb.com',
+    },
+    smartAccount: {
+      chain: baseSepolia,
+      sponsorGas: true,
+    },
+  }),
+  createWallet('io.metamask'),
+  createWallet('com.coinbase.wallet', {
+    appMetadata: {
+      name: 'Thirdweb RN Demo',
+    },
+    mobileConfig: {
+      callbackURL: 'com.thirdweb.demo://',
+    },
+    walletConfig: {
+      options: 'smartWalletOnly',
+    },
+  }),
+  createWallet('me.rainbow'),
+  createWallet('com.trustwallet.app'),
+  createWallet('io.zerion.wallet'),
+];

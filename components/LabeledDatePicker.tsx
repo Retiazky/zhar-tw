@@ -11,9 +11,8 @@ type Props = {
 };
 
 export const LabeledDatePicker = ({ label, bottomNote, value, onChange }: Props) => {
-  const pickDate = (event: any, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || value;
-    onChange(currentDate);
+  const pickDate = (event: unknown, date?: Date) => {
+    onChange(date ?? new Date());
   };
   return (
     <View className="gap-2 relative">

@@ -11,14 +11,19 @@ type Props = {
   onChangeText: (text: string) => void;
 };
 
-export const LabeledTextarea = (props: Props) => {
+export const LabeledTextarea = ({ label, placeholder, bottomNote, value, onChangeText }: Props) => {
   return (
     <View className="gap-2">
-      <Label className="text-foreground text-lg font-bold">{props.label}</Label>
-      <Textarea aria-labelledby="textareaLabel" placeholder={props.placeholder} />
-      {props.bottomNote && (
-        <Text className="text-sm text-muted-foreground">{props.bottomNote}</Text>
-      )}
+      <Label className="text-foreground text-lg font-bold">{label}</Label>
+      <Textarea
+        aria-labelledby="textareaLabel"
+        placeholder={placeholder}
+        value={value}
+        autoComplete="off"
+        autoCorrect={false}
+        onChangeText={onChangeText}
+      />
+      {bottomNote && <Text className="text-sm text-muted-foreground">{bottomNote}</Text>}
     </View>
   );
 };
