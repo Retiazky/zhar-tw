@@ -110,8 +110,6 @@ export default function useGraphService() {
             volume
         }
     }`;
-
-    console.log('Address:', address);
     try {
       const resp = await api<GetChallengesResponse>('/graphql', {
         method: 'POST',
