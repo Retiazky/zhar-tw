@@ -101,13 +101,17 @@ export default function HomeScreen() {
       <View className="w-full justify-between  flex-row flex items-center">
         <View className="w-[40px]" />
         <Text className="text-xl font-bold text-foreground text-center">Challenges</Text>
-        <Button variant="ghost" onPress={() => router.push('/challenges/active')}>
-          <FlameIcon
-            size={24}
-            color={hasActiveChallenges ? Colors.dark.tabIconSelected : Colors.dark.tabIconDefault}
-            fill={hasActiveChallenges ? Colors.dark.tabIconSelected : undefined}
-          />
-        </Button>
+        {account ? (
+          <Button variant="ghost" onPress={() => router.push('/challenges/active')}>
+            <FlameIcon
+              size={24}
+              color={hasActiveChallenges ? Colors.dark.tabIconSelected : Colors.dark.tabIconDefault}
+              fill={hasActiveChallenges ? Colors.dark.tabIconSelected : undefined}
+            />
+          </Button>
+        ) : (
+          <View className="w-[40px]" />
+        )}
       </View>
       <View className="p-4 gap-2">
         <SortDropdown

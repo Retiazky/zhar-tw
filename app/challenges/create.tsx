@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/Colors';
 import { europContract, zharChallengesContract } from '@/constants/thirdweb';
+import { useAIService } from '@/hooks/services/useAIService';
 import { stringifyDescription } from '@/lib/parser';
 import { checkIfRegistered } from '@/lib/utils';
 import { router } from 'expo-router';
@@ -24,6 +25,7 @@ export default function CreateChallengeScreen() {
   const [expireDate, setExpireDate] = useState<Date>(new Date());
 
   const account = useActiveAccount();
+  const aiService = useAIService();
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -73,6 +75,12 @@ export default function CreateChallengeScreen() {
     }
     try {
       const rawDescription = stringifyDescription(title, description);
+      const score = await aiService.getScore(rawDescription);
+      if (score < 6) {
+        setErrorMessage('Challenge is not suitable. Please try different challenge.');
+        setLoading(false);
+        return;
+      }
       console.log('Preparing transaction to create challenge...');
       let ign = parseEther(ignation);
       const approveTx = prepareContractCall({

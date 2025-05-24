@@ -121,7 +121,7 @@ export default function ProfileScreen() {
                     {data?.name ?? 'Ember'}
                   </Text>
                   <Text className="text-foreground/50 text-sm">Joined {joinedDate}</Text>
-                  <Text className="text-foreground/50 text-sm">100 🔥 XP</Text>
+                  <Text className="text-foreground/50 text-sm">{data?.totalXp ?? 0} 🔥 XP</Text>
                 </View>
               )}
 
