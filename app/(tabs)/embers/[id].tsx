@@ -11,6 +11,7 @@ import { X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, View } from 'react-native';
 import { SvgFromXml } from 'react-native-svg';
+import { parseEther } from 'viem';
 
 type Params = {
   id: string;
@@ -60,7 +61,9 @@ export default function EmberScreen() {
               {params.id && (
                 <View className="items-center justify-center">
                   <Text className="text-foreground/50 text-sm">Joined {joinedDate}</Text>
-                  <Text className="text-foreground/50 text-sm">100 🔥 XP</Text>
+                  <Text className="text-foreground/50 text-sm">
+                    {data?.totalXp ? parseEther(data.totalXp.toString()) : 0} 🔥 XP
+                  </Text>
                 </View>
               )}
 
