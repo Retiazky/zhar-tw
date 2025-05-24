@@ -1,7 +1,9 @@
+import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
 import { memo, useMemo } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { formatEther } from 'viem';
+
 type Props = {
   id: string;
   title: string;
@@ -23,14 +25,15 @@ const ChallengeCard: React.FC<Props> = ({ id, title, xp, staked, expiresAt }) =>
       className="w-full flex flex-row justify-between p-2">
       <View className="flex flex-col">
         <Text className="text-lg text-white font-semibold">{title}</Text>
-        <Text className="text-sm  text-secondary-foreground">
+        <Text className="text-sm text-secondary-foreground">Time Left: {expiresIn}</Text>
+        <Text className="text-sm text-secondary-foreground">
           Staked: {formatEther(staked)} EURØP
         </Text>
-        <Text className="text-sm  text-secondary-foreground">Expires in: {expiresIn}</Text>
       </View>
       <View className="flex flex-row items-center  gap-1">
-        <Text className="text-md  text-white">{formatEther(xp)}</Text>
-        <Text className="text-sm">🔥</Text>
+        <Text className="text-md text-white">{formatEther(xp)}</Text>
+        <Text className="text-sm ">🔥</Text>
+        <Text className="text-md text-white">XP</Text>
       </View>
     </TouchableOpacity>
   );
