@@ -92,8 +92,6 @@ export default function ProfileScreen() {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   }, [data]);
 
-  console.log(bloSvg(account?.address as Address));
-
   return (
     <SafeAreaView className="bg-background flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>

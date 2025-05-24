@@ -141,10 +141,9 @@ export default function useGraphService() {
                 ignited {
                     id
                 }
+                totalXp
             }
         }`;
-
-    console.log('GraphQL Query:', query);
     try {
       const resp = await api<GetEmbersResponse>('/graphql', {
         method: 'POST',

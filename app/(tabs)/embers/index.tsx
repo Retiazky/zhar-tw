@@ -1,11 +1,13 @@
+import ProfileCard from '@/components/ProfileCard';
 import { SearchBar } from '@/components/SearchBar';
 import SortDropdown from '@/components/SortDropdown';
 import { Text } from '@/components/ui/text';
 import useGraphService from '@/hooks/services/useGraphService';
-import { SortDirection, SortEmbersField, SortFieldOption } from '@/types/challenge';
+import { Ember, SortDirection, SortEmbersField, SortFieldOption } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { SafeAreaView, ScrollView, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { FlatList, ListRenderItem, SafeAreaView, View } from 'react-native';
+import { formatEther } from 'viem';
 
 const FIELDS: SortFieldOption<SortEmbersField>[] = [
   { key: 'createdAt', label: '🗓️ Date joined' },
@@ -16,11 +18,16 @@ export default function EmbersScreen() {
   const [sortField, setSortField] = useState<SortEmbersField>('createdAt');
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
   const graphService = useGraphService();
-  const { data } = useQuery({
+
+  const { data, error } = useQuery({
     queryKey: ['embers', sortField, sortDirection],
     queryFn: async () => await graphService.getEmbers(sortField, sortDirection),
     retry: false,
   });
+
+  const renderEmber: ListRenderItem<Ember> = useCallback(({ item }) => {
+    return <ProfileCard id={item.id} name={item.name} xp={formatEther(item.totalXp)} />;
+  }, []);
 
   return (
     <SafeAreaView className="bg-background flex-1">
@@ -40,19 +47,21 @@ export default function EmbersScreen() {
         />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} className="p-4">
-        <View className="flex-1 gap-10">
-          {data?.map((ember) => (
-            <View key={ember.id} className="p-4 bg-card rounded-lg shadow">
-              <Text className="text-lg font-semibold text-foreground">{ember.name}</Text>
-              <Text className="text-sm text-muted-foreground">XP: {ember.totalXp}</Text>
-              <Text className="text-sm text-muted-foreground">
-                Joined: {new Date(ember.createdAt).toLocaleDateString()}
+      <FlatList
+        contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={renderEmber}
+        ListHeaderComponent={() => {
+          return (
+            error && (
+              <Text className="text-foreground text-lg font-semibold">
+                Error loading embers: {error.message}
               </Text>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+            )
+          );
+        }}
+      />
     </SafeAreaView>
   );
 }
