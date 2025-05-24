@@ -71,15 +71,13 @@ export default function ChallengeScreen() {
               {/* Description  */}
               <Text className="text-start text-foreground text-md">{description}</Text>
               {/* Igniter */}
-              {/* TODO: OPEN PROFILE */}
               <Text className="text-start text-foreground text-md font-bold">🔥 Igniter</Text>
-              <TouchableOpacity onPress={() => console.log('Igniter pressed')}>
+              <TouchableOpacity onPress={() => router.push(`/embers/${data?.igniter.id}`)}>
                 <Text className="text-start text-primary underline">{data?.igniter.id}</Text>
               </TouchableOpacity>
               {/* Zharrior */}
-              {/* TODO: OPEN PROFILE */}
               <Text className="text-start text-foreground text-md font-bold">🧑🏻‍🚀 Zharrior</Text>
-              <TouchableOpacity onPress={() => console.log('Zharrior pressed')}>
+              <TouchableOpacity onPress={() => router.push(`/embers/${data?.zharrior.id}`)}>
                 <Text className="text-start text-primary underline">{data?.zharrior.id}</Text>
               </TouchableOpacity>
 
