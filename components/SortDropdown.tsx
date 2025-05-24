@@ -8,34 +8,28 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Colors } from '@/constants/Colors';
+import { SortDirection, SortFieldOption } from '@/types/challenge';
 import { ChevronDown, SortAsc, SortDesc } from 'lucide-react-native';
 import React, { memo, useState } from 'react';
 import { Text, View } from 'react-native';
 
-type SortDirection = 'asc' | 'desc';
-
-type SortFieldOption = {
-  key: string;
-  label: string;
+type Props<T> = {
+  fields: SortFieldOption<T>[];
+  onChange?: (field: T, direction: SortDirection) => void;
 };
 
-type Props = {
-  fields: SortFieldOption[];
-  onChange?: (field: string, direction: SortDirection) => void;
-};
+const SortDropdown = <T extends string>({ fields, onChange }: Props<T>) => {
+  const [sortField, setSortField] = useState<T>(fields[0]?.key ?? '');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
 
-const SortDropdown: React.FC<Props> = ({ fields, onChange }) => {
-  const [sortField, setSortField] = useState<string>(fields[0]?.key ?? '');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
-
-  const toggleDirection = (field: string) => {
+  const toggleDirection = (field: T) => {
     let newDirection: SortDirection;
     let newField = field;
 
     if (field === sortField) {
-      newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      newDirection = sortDirection === 'ASC' ? 'DESC' : 'ASC';
     } else {
-      newDirection = 'desc';
+      newDirection = 'DESC';
     }
 
     setSortField(newField);
@@ -48,7 +42,7 @@ const SortDropdown: React.FC<Props> = ({ fields, onChange }) => {
   return (
     <View className="flex-row gap-2 items-center">
       <Button variant="ghost" size="icon" onPress={() => toggleDirection(sortField)}>
-        {sortDirection === 'asc' ? (
+        {sortDirection === 'ASC' ? (
           <SortDesc size={20} color={Colors.dark.icon} />
         ) : (
           <SortAsc size={20} color={Colors.dark.icon} />

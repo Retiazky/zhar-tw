@@ -1,3 +1,11 @@
+export type SortEmbersField = 'xp' | 'date';
+export type SortDirection = 'ASC' | 'DESC';
+
+export type SortFieldOption<T> = {
+  key: T;
+  label: string;
+};
+
 export interface Ignited {
   id: string;
 }

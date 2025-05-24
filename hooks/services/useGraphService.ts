@@ -1,4 +1,4 @@
-import { Challenge, Ember } from '@/types/challenge';
+import { Challenge, Ember, SortDirection, SortEmbersField } from '@/types/challenge';
 import { ofetch } from 'ofetch';
 
 const api = ofetch.create({
@@ -112,18 +112,18 @@ export default function useGraphService() {
     };
   }
 
-  const getEmbers = async () => {
+  const getEmbers = async (sortField: SortEmbersField, direction: SortDirection) => {
     const query = `query GetEmbers {
-        embers {
-            id
-            createdAt
-            blockNumber
-            name
-            updatedAt
-            ignited {
-            id
+            embers {
+                id
+                createdAt
+                blockNumber
+                name
+                updatedAt
+                ignited {
+                id
+                }
             }
-        }
         }`;
     try {
       const resp = await api<GetEmbersResponse>('/graphql', {
