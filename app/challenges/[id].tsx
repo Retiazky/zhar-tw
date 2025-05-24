@@ -51,13 +51,15 @@ export default function ChallengeScreen() {
 
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
+      <View className="p-4">
+        <ModalHeader
+          title="Challenge Details"
+          leftIcon={<X size={24} color={Colors.dark.icon} />}
+          onLeftIconPress={() => router.back()}
+        />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="p-4 gap-8">
-          <ModalHeader
-            title="Challenge Details"
-            leftIcon={<X size={24} color={Colors.dark.icon} />}
-            onLeftIconPress={() => router.back()}
-          />
           {error ? (
             <Text className="text-foreground text-lg font-semibold">
               There was en error loading the challenge detail. {error.message}
