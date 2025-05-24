@@ -9,12 +9,12 @@ import { useCallback, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, View } from 'react-native';
 
 const FIELDS: SortFieldOption<SortEmbersField>[] = [
-  { key: 'date', label: '🗓️ Date joined' },
-  { key: 'xp', label: '🔥 XP' },
+  { key: 'createdAt', label: '🗓️ Date joined' },
+  { key: 'totalXp', label: '🔥 XP' },
 ];
 
 export default function EmbersScreen() {
-  const [sortField, setSortField] = useState<SortEmbersField>('date');
+  const [sortField, setSortField] = useState<SortEmbersField>('createdAt');
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
   const graphService = useGraphService();
   const { data, error } = useQuery({

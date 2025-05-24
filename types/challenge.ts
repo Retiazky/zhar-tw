@@ -1,4 +1,5 @@
-export type SortEmbersField = 'xp' | 'date';
+export type SortEmbersField = 'totalXp' | 'createdAt';
+export type SortChallengesField = 'createdAt' | 'volume';
 export type SortDirection = 'ASC' | 'DESC';
 
 export type SortFieldOption<T> = {
@@ -17,6 +18,7 @@ export interface Ember {
   name: string;
   updatedAt: string;
   ignited: Ignited;
+  totalXp: bigint; // total XP earned by the ember
 }
 
 export interface Deposit {

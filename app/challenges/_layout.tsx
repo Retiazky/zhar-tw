@@ -1,4 +1,5 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -20,6 +21,7 @@ export default function ChallengeLayout() {
           <Stack.Screen name="active" />
           <Stack.Screen name="[id]" />
         </Stack>
+        <PortalHost />
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
