@@ -126,12 +126,22 @@ export default function ChallengeScreen() {
               {/* Igniter */}
               <Text className="text-start text-foreground text-md font-bold">🔥 Igniter</Text>
               <TouchableOpacity onPress={() => router.push(`/embers/${data?.igniter.id}`)}>
-                <Text className="text-start text-primary underline">{data?.igniter.id}</Text>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  className="text-start text-primary underline">
+                  {data?.igniter.id}
+                </Text>
               </TouchableOpacity>
               {/* Zharrior */}
               <Text className="text-start text-foreground text-md font-bold">🧑🏻‍🚀 Zharrior</Text>
               <TouchableOpacity onPress={() => router.push(`/embers/${data?.zharrior.id}`)}>
-                <Text className="text-start text-primary underline">{data?.zharrior.id}</Text>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  className="text-start text-primary underline">
+                  {data?.zharrior.id}
+                </Text>
               </TouchableOpacity>
 
               {/* Number of Stokers */}
@@ -151,7 +161,12 @@ export default function ChallengeScreen() {
                 <>
                   <Text className="text-start text-foreground text-md font-bold">📄 Proof</Text>
                   <TouchableOpacity onPress={() => Linking.openURL(data.uri)}>
-                    <Text className="text-start text-primary underline">{data?.uri}</Text>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="middle"
+                      className="text-start text-primary underline">
+                      {data?.uri}
+                    </Text>
                   </TouchableOpacity>
                 </>
               )}
