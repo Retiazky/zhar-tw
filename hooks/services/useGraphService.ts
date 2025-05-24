@@ -1,4 +1,10 @@
-import { Challenge, Ember, SortDirection, SortEmbersField } from '@/types/challenge';
+import {
+  Challenge,
+  Ember,
+  SortChallengesField,
+  SortDirection,
+  SortEmbersField,
+} from '@/types/challenge';
 import { ofetch } from 'ofetch';
 
 const api = ofetch.create({
@@ -69,10 +75,14 @@ export default function useGraphService() {
       challenges: Challenge[];
     };
   }
-  const getChallenges = async (active: boolean = false) => {
+  const getChallenges = async (
+    sortField: SortChallengesField,
+    direction: SortDirection,
+    active: boolean = false,
+  ) => {
     const query = `
     query GetChallenges {
-        challenges${active ? '(where: { status_eq: Active })' : ''} {
+        challenges(orderBy: ${sortField}_${direction}, ${active ? 'where: { status_eq: Active }' : ''}) {
             id
             amount
             blockNumber
@@ -114,17 +124,19 @@ export default function useGraphService() {
 
   const getEmbers = async (sortField: SortEmbersField, direction: SortDirection) => {
     const query = `query GetEmbers {
-            embers {
+            embers (orderBy: ${sortField}_${direction}, where: { name_isNull: false }) {
                 id
                 createdAt
                 blockNumber
                 name
                 updatedAt
                 ignited {
-                id
+                    id
                 }
             }
         }`;
+
+    console.log('GraphQL Query:', query);
     try {
       const resp = await api<GetEmbersResponse>('/graphql', {
         method: 'POST',

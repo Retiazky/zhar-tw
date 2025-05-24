@@ -1,21 +1,33 @@
 import ChallengeCard from '@/components/ChallengeCard';
 import { ModalHeader } from '@/components/ModalHeader';
+import SortDropdown from '@/components/SortDropdown';
 import { Colors } from '@/constants/Colors';
 import useGraphService from '@/hooks/services/useGraphService';
 import { X } from '@/lib/icons/X';
 import { parseDescription } from '@/lib/parser';
-import { Challenge } from '@/types/challenge';
+import { Challenge, SortChallengesField, SortDirection } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, View } from 'react-native';
+
+const FIELDS = [
+  { key: 'createdAt', label: '🗓️ Date ignited' },
+  {
+    key: 'volume',
+    label: '🔥 Ignites',
+  },
+];
 
 export default function ActiveChallengesScreen() {
   const graphService = useGraphService();
 
+  const [sortField, setSortField] = useState<SortChallengesField>('createdAt');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+
   const { data, error } = useQuery({
-    queryKey: ['active-challenges'],
-    queryFn: async () => await graphService.getChallenges(true),
+    queryKey: ['active-challenges', sortField, sortDirection],
+    queryFn: async () => await graphService.getChallenges(sortField, sortDirection, true),
     retry: false,
   });
 
@@ -41,7 +53,15 @@ export default function ActiveChallengesScreen() {
           onLeftIconPress={() => router.back()}
         />
       </View>
-      <View className="p-4 gap-8">
+
+      <View className="p-4 gap-2">
+        <SortDropdown
+          fields={FIELDS}
+          onChange={(field, direction) => {
+            setSortField(field as SortChallengesField);
+            setSortDirection(direction);
+          }}
+        />
         <FlatList
           contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
           data={data}

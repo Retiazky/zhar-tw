@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { router } from 'expo-router';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { formatEther } from 'viem';
 import CountdownTimer from './CountdownTimer';
@@ -13,13 +13,6 @@ type Props = {
   expiresAt: Date;
 };
 const ChallengeCard: React.FC<Props> = ({ id, title, xp, staked, expiresAt }) => {
-  const expiresIn = useMemo(() => {
-    const now = new Date();
-    const diff = expiresAt.getTime() - now.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    return `${days}d ${hours}h`;
-  }, [expiresAt]);
   return (
     <TouchableOpacity
       onPress={() => router.push(`/challenges/${id}`)}

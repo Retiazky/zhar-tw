@@ -8,12 +8,12 @@ import { useState } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 
 const FIELDS: SortFieldOption<SortEmbersField>[] = [
-  { key: 'date', label: '🗓️ Date joined' },
-  { key: 'xp', label: '🔥 XP' },
+  { key: 'createdAt', label: '🗓️ Date joined' },
+  { key: 'totalXp', label: '🔥 XP' },
 ];
 
 export default function EmbersScreen() {
-  const [sortField, setSortField] = useState<SortEmbersField>('date');
+  const [sortField, setSortField] = useState<SortEmbersField>('createdAt');
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
   const graphService = useGraphService();
   const { data } = useQuery({
@@ -41,7 +41,17 @@ export default function EmbersScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
-        <View className="flex-1 gap-10">{/* TODO: Profiles */}</View>
+        <View className="flex-1 gap-10">
+          {data?.map((ember) => (
+            <View key={ember.id} className="p-4 bg-card rounded-lg shadow">
+              <Text className="text-lg font-semibold text-foreground">{ember.name}</Text>
+              <Text className="text-sm text-muted-foreground">XP: {ember.totalXp}</Text>
+              <Text className="text-sm text-muted-foreground">
+                Joined: {new Date(ember.createdAt).toLocaleDateString()}
+              </Text>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

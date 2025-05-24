@@ -7,7 +7,7 @@ import useGraphService from '@/hooks/services/useGraphService';
 import { WALLETS } from '@/lib/constants';
 import { parseDescription } from '@/lib/parser';
 import { checkIfRegistered } from '@/lib/utils';
-import { Challenge } from '@/types/challenge';
+import { Challenge, SortChallengesField, SortDirection } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
 import { router, useFocusEffect } from 'expo-router';
 import { FlameIcon, Plus } from 'lucide-react-native';
@@ -15,6 +15,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, View } from 'react-native';
 import { baseSepolia } from 'thirdweb/chains';
 import { useActiveAccount, useAutoConnect } from 'thirdweb/react';
+
+const FIELDS = [
+  { key: 'createdAt', label: '🗓️ Date ignited' },
+  {
+    key: 'volume',
+    label: '🔥 Ignites',
+  },
+];
 
 export default function HomeScreen() {
   const graphService = useGraphService();
@@ -25,12 +33,12 @@ export default function HomeScreen() {
     wallets: WALLETS,
   });
 
-  const [sortField, setSortField] = useState('date');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortField, setSortField] = useState<SortChallengesField>('createdAt');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
 
   const { data, error, refetch } = useQuery({
-    queryKey: ['challenges'],
-    queryFn: async () => await graphService.getChallenges(),
+    queryKey: ['challenges', sortField, sortDirection],
+    queryFn: async () => await graphService.getChallenges(sortField, sortDirection),
     retry: false,
   });
 
@@ -78,7 +86,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className="bg-background flex-1">
-      <View className="w-full justify-between px-4 flex-row flex items-center">
+      <View className="w-full justify-between  flex-row flex items-center">
         <View className="w-[40px]" />
         <Text className="text-xl font-bold text-foreground text-center">Challenges</Text>
         <Button variant="ghost" onPress={() => router.push('/challenges/active')}>
@@ -89,34 +97,31 @@ export default function HomeScreen() {
           />
         </Button>
       </View>
+      <View className="p-4 gap-2">
+        <SortDropdown
+          fields={FIELDS}
+          onChange={(field, direction) => {
+            setSortField(field as SortChallengesField);
+            setSortDirection(direction);
+          }}
+        />
 
-      <SortDropdown
-        fields={[
-          { key: 'date', label: '🗓️ Date ignited' },
-          { key: 'xp', label: '🔥 XP' },
-          { key: 'staked', label: '💰 Staked' },
-        ]}
-        onChange={(field, direction) => {
-          setSortField(field);
-          setSortDirection(direction);
-        }}
-      />
-
-      <FlatList
-        contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={renderChallenge}
-        ListHeaderComponent={() => {
-          return (
-            error && (
-              <Text className="text-foreground text-lg font-semibold">
-                Error loading challenges: {error.message}
-              </Text>
-            )
-          );
-        }}
-      />
+        <FlatList
+          contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={renderChallenge}
+          ListHeaderComponent={() => {
+            return (
+              error && (
+                <Text className="text-foreground text-lg font-semibold">
+                  Error loading challenges: {error.message}
+                </Text>
+              )
+            );
+          }}
+        />
+      </View>
       {account && isRegistered && !loading && !accountLoading && (
         <Button
           className="absolute bottom-8 right-4 w-16 h-16 rounded-full items-center justify-center"
