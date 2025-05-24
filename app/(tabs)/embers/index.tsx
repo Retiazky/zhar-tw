@@ -17,12 +17,18 @@ const FIELDS: SortFieldOption<SortEmbersField>[] = [
 export default function EmbersScreen() {
   const [sortField, setSortField] = useState<SortEmbersField>('createdAt');
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+  const [searchTerm, setSearchTerm] = useState('');
   const graphService = useGraphService();
 
   const { data, error } = useQuery({
     queryKey: ['embers', sortField, sortDirection],
     queryFn: async () => await graphService.getEmbers(sortField, sortDirection),
     retry: false,
+  });
+
+  const filteredData = data?.filter((ember) => {
+    const term = searchTerm.toLowerCase();
+    return ember.name?.toLowerCase().includes(term) || ember.id.toLowerCase().includes(term);
   });
 
   const renderEmber: ListRenderItem<Ember> = useCallback(({ item }) => {
@@ -34,8 +40,7 @@ export default function EmbersScreen() {
       <Text className="text-xl font-bold text-foreground text-center py-2">Embers</Text>
 
       <View className="w-full p-4">
-        {/* TODO: logic */}
-        <SearchBar />
+        <SearchBar value={searchTerm} onChangeText={setSearchTerm} />
       </View>
 
       <View className="px-4">
@@ -50,18 +55,16 @@ export default function EmbersScreen() {
 
       <FlatList
         contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
-        data={data}
+        data={filteredData}
         keyExtractor={(item) => item.id}
         renderItem={renderEmber}
-        ListHeaderComponent={() => {
-          return (
-            error && (
-              <Text className="text-foreground text-lg font-semibold">
-                Error loading embers: {error.message}
-              </Text>
-            )
-          );
-        }}
+        ListHeaderComponent={() =>
+          error ? (
+            <Text className="text-foreground text-lg font-semibold">
+              Error loading embers: {error.message}
+            </Text>
+          ) : null
+        }
       />
     </SafeAreaView>
   );
