@@ -25,6 +25,7 @@ import { SvgFromXml } from 'react-native-svg';
 import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { baseSepolia } from 'thirdweb/chains';
 import { ConnectButton, useActiveAccount } from 'thirdweb/react';
+import { formatEther } from 'viem';
 
 export default function ProfileScreen() {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
@@ -37,6 +38,11 @@ export default function ProfileScreen() {
   const { data } = useQuery({
     queryKey: ['profile', account?.address],
     queryFn: async () => (account?.address ? await graphService.getEmber(account.address) : null),
+    retry: false,
+  });
+  const { data: europData } = useQuery({
+    queryKey: ['balance', account?.address],
+    queryFn: async () => (account?.address ? await graphService.getEuropBalance(account.address) : null),
     retry: false,
   });
   const [loading, setLoading] = useState<boolean>(false);
@@ -185,6 +191,9 @@ export default function ProfileScreen() {
                 </Text>
                 <Text className="text-foreground/50 text-sm">Joined {joinedDate}</Text>
                 <Text className="text-foreground/50 text-sm">{data?.totalXp ?? 0} 🔥 XP</Text>
+                  <Text className="text-foreground text-xl font-bold">
+                      {europData && europData.length > 0 ? formatEther(BigInt(europData[0].amount)) : '0'} EUROP
+                  </Text>
               </View>
             )}
 

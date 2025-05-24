@@ -188,10 +188,34 @@ export default function useGraphService() {
     }
   };
 
+  const getEuropBalance = async (address: string) => {
+    const query = `query EuropBalance($address: String!) {
+      tokens(where: {ember: {id_eq: $address}, name_eq: "Europ"}) {
+        id
+        amount
+        contract
+        name
+      }}`;
+    try {
+      const resp = await api<{ data: { tokens: { id: string; amount: string; contract: string; name: string }[] } }>('/graphql', {
+        method: 'POST',
+        body: { query, operationName: 'EuropBalance', variables: { address: address.toLowerCase() } },
+      });
+      console.log('Europ balance response:', resp);
+      return resp.data.tokens;
+    }
+    catch (e) {
+      console.error('Error fetching Europ balance:', e);
+      throw e;
+    }
+  }
+
+
   return {
     getChallenges,
     getChallenge,
     getEmbers,
     getEmber,
+    getEuropBalance
   };
 }
