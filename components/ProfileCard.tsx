@@ -1,38 +1,42 @@
 import { Text } from '@/components/ui/text';
+import { Address, bloSvg } from 'blo';
 import { router } from 'expo-router';
 import { memo } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { formatEther } from 'viem';
-import CountdownTimer from './CountdownTimer';
+import { Image, TouchableOpacity, View } from 'react-native';
+import { SvgFromXml } from 'react-native-svg';
 
 type Props = {
   id: string;
   name: string;
-  xp?: bigint;
+  xp: string;
 };
 
-const ProfileCard: React.FC<Props> = ({ id, name, xp }) => {
+const ProfileCard = ({ id, name, xp }: Props) => {
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/challenges/${id}`)}
-      className="w-full flex flex-row justify-between p-2">
-      <View className="flex flex-col">
-        <Text className="text-lg text-white font-semibold">{title}</Text>
-        <View className="flex flex-row items-center gap-2">
-          <Text className="text-sm text-secondary-foreground">Time Left:</Text>
-          <CountdownTimer expiration={expiresAt.toISOString()} flat />
-        </View>
-        <Text className="text-sm text-secondary-foreground">
-          Staked: {formatEther(staked)} EURØP
-        </Text>
+      onPress={() => router.push(`/embers/${id}`)}
+      className="w-full flex-row items-center p-4 gap-4">
+      {/* Avatar */}
+      <View className="w-16 h-16 rounded-full bg-foreground/10 items-center justify-center overflow-hidden">
+        {id ? (
+          <SvgFromXml xml={bloSvg(id as Address)} width={48} height={48} />
+        ) : (
+          <Image
+            source={require('@/assets/images/zhar-clear.png')}
+            className="w-16 h-16 rounded-full"
+            resizeMode="cover"
+          />
+        )}
       </View>
-      <View className="flex flex-row items-center  gap-1">
-        <Text className="text-md text-white">{formatEther(xp)}</Text>
-        <Text className="text-sm ">🔥</Text>
-        <Text className="text-md text-white">XP</Text>
+
+      {/* Info */}
+      <View className="flex-1">
+        <Text className="text-lg text-white font-semibold">{name}</Text>
+        <Text className="text-sm text-secondary-foreground">{id}</Text>
+        <Text className="text-sm text-secondary-foreground">{xp} 🔥 XP</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default memo(ChallengeCard);
+export default memo(ProfileCard);

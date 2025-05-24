@@ -7,6 +7,7 @@ import { Ember, SortDirection, SortEmbersField, SortFieldOption } from '@/types/
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, View } from 'react-native';
+import { formatEther } from 'viem';
 
 const FIELDS: SortFieldOption<SortEmbersField>[] = [
   { key: 'createdAt', label: '🗓️ Date joined' },
@@ -17,6 +18,7 @@ export default function EmbersScreen() {
   const [sortField, setSortField] = useState<SortEmbersField>('createdAt');
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
   const graphService = useGraphService();
+
   const { data, error } = useQuery({
     queryKey: ['embers', sortField, sortDirection],
     queryFn: async () => await graphService.getEmbers(sortField, sortDirection),
@@ -24,7 +26,7 @@ export default function EmbersScreen() {
   });
 
   const renderEmber: ListRenderItem<Ember> = useCallback(({ item }) => {
-    return <ProfileCard id={item.id} name={item.name} xp={item.volume} />;
+    return <ProfileCard id={item.id} name={item.name} xp={formatEther(item.totalXp)} />;
   }, []);
 
   return (
