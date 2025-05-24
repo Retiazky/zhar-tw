@@ -35,7 +35,7 @@ export default function CountdownTimer({
   const renderTimeBox = (value: number, label: string) => (
     <View
       key={label}
-      className="items-center justify-center bg-[#3A2321] rounded-xl w-16 h-16 mx-1">
+      className="items-center justify-center bg-secondary rounded-xl w-16 h-16 mx-1">
       <Text className="text-white text-xl font-bold">{value.toString().padStart(2, '0')}</Text>
       <Text className="text-xs text-white mt-1">{label}</Text>
     </View>

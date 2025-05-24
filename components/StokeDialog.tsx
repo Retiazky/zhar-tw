@@ -14,7 +14,7 @@ type Props = {
 export default function StokeDialog({ onClose, open }: Props) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const [portion, setPortion] = useState<number>(1);
+  const [portion, setPortion] = useState<number>(10);
 
   useEffect(() => {
     if (open) {
@@ -29,19 +29,18 @@ export default function StokeDialog({ onClose, open }: Props) {
   }, [onClose]);
 
   const incrementPortion = () => setPortion((p) => p + 1);
-  const decrementPortion = () => setPortion((p) => (p > 1 ? p - 1 : 1));
+  const decrementPortion = () => setPortion((p) => (p > 10 ? p - 1 : 10));
+
   const onChangePortion = (text: string) => {
-    // only allow numbers, default to 1 if invalid
     const num = parseInt(text, 10);
-    if (!isNaN(num) && num >= 1) setPortion(num);
-    else setPortion(1);
+    if (!isNaN(num)) {
+      setPortion(num);
+    }
   };
 
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
-      index={0}
-      snapPoints={['40%']}
       onDismiss={handleDismiss}
       backgroundStyle={{ backgroundColor: Colors.dark.background }}
       handleIndicatorStyle={{ backgroundColor: Colors.dark.icon }}
@@ -53,41 +52,42 @@ export default function StokeDialog({ onClose, open }: Props) {
           pressBehavior="close"
         />
       )}>
-      <BottomSheetView className="p-4 gap-4 bg-background">
+      <BottomSheetView className="p-4 gap-4 bg-background items-center">
         {/* Title */}
-        <Text className="text-xl font-bold text-center mb-2">Stoke this Challenge</Text>
-
-        {/* Row with log emoji + portion, and controls */}
-        <View className="flex-row justify-between items-center mb-4">
-          <Text className="text-lg">🔥 Portion: {portion}</Text>
-
-          <View className="flex-row items-center gap-2">
-            <Button onPress={decrementPortion}>
-              <Text className="text-black text-lg font-bold">−</Text>
-            </Button>
-
-            <TextInput
-              keyboardType="numeric"
-              value={portion.toString()}
-              onChangeText={onChangePortion}
-              className="border border-gray-400 rounded px-2 py-1 w-12 text-center text-lg"
-              maxLength={3}
-            />
-
-            <Button onPress={incrementPortion}>
-              <Text className="text-black text-lg font-bold">+</Text>
-            </Button>
-          </View>
-        </View>
+        <Text className="text-xl font-bold text-center">Stoke This Challenge</Text>
 
         {/* Description */}
-        <Text className="text-center mb-6">
-          You've added your logs and contributed to the prize pool. Let the games begin!
+        <Text className="text-center">
+          Minimum stoke amount is 10 EURØP. You can increase this amount by pressing the plus
+          button. You can also type a number directly into the input field.
         </Text>
 
+        {/* Row with log emoji + portion, and controls */}
+        <View className="flex-row items-center gap-2">
+          <Button onPress={decrementPortion} size="icon" disabled={portion === 10}>
+            <Text className="text-lg font-bold">−</Text>
+          </Button>
+
+          <Text className="text-center text-lg">🪵 </Text>
+          <TextInput
+            keyboardType="numeric"
+            value={portion.toString()}
+            onChangeText={onChangePortion}
+            className="w-40 h-10 text-center text-lg text-foreground bg-secondary rounded-md"
+          />
+
+          <Button onPress={incrementPortion} size="icon">
+            <Text className="text-black text-lg font-bold">+</Text>
+          </Button>
+        </View>
+
         {/* Stoke Button */}
-        <Button onPress={handleDismiss} className="bg-blue-600 rounded py-3">
-          <Text className="text-white font-semibold text-center">Stoke</Text>
+        <Button
+          onPress={handleDismiss}
+          variant="default"
+          className="w-[70%]"
+          disabled={portion < 10}>
+          <Text>Stoke</Text>
         </Button>
       </BottomSheetView>
     </BottomSheetModal>
