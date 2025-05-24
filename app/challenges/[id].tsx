@@ -9,7 +9,7 @@ import { zharChallengesContract } from '@/constants/thirdweb';
 import useGraphService from '@/hooks/services/useGraphService';
 import { parseDescription } from '@/lib/parser';
 import { useQuery } from '@tanstack/react-query';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Linking, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
