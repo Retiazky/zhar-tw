@@ -32,7 +32,12 @@ const ProfileCard = ({ id, name, xp }: Props) => {
       {/* Info */}
       <View className="flex-1">
         <Text className="text-lg text-white font-semibold">{name}</Text>
-        <Text className="text-sm text-secondary-foreground">{id}</Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="middle"
+          className="text-sm text-secondary-foreground ">
+          {id}
+        </Text>
         <Text className="text-sm text-secondary-foreground">{xp} 🔥 XP</Text>
       </View>
     </TouchableOpacity>
