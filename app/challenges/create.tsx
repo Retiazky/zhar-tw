@@ -109,13 +109,15 @@ export default function CreateChallengeScreen() {
   };
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
+      <View className="p-4">
+        <ModalHeader
+          title="New Challenge"
+          leftIcon={<X size={24} color={Colors.dark.icon} />}
+          onLeftIconPress={() => router.back()}
+        />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="p-4 gap-8">
-          <ModalHeader
-            title="New Challenge"
-            leftIcon={<X size={24} color={Colors.dark.icon} />}
-            onLeftIconPress={() => router.back()}
-          />
           <Text className="text-center text-foreground text-lg">
             Ignite a new challenge — choose your{' '}
             <Text className="text-primary font-bold">Zharrior</Text>, set the{' '}

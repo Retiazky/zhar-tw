@@ -12,6 +12,7 @@ import { X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useActiveAccount } from 'thirdweb/react';
+import { formatEther } from 'viem';
 
 type Params = {
   id: string;
@@ -50,13 +51,15 @@ export default function ChallengeScreen() {
 
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
+      <View className="p-4">
+        <ModalHeader
+          title="Challenge Details"
+          leftIcon={<X size={24} color={Colors.dark.icon} />}
+          onLeftIconPress={() => router.back()}
+        />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="p-4 gap-8">
-          <ModalHeader
-            title="Challenge Details"
-            leftIcon={<X size={24} color={Colors.dark.icon} />}
-            onLeftIconPress={() => router.back()}
-          />
           {error ? (
             <Text className="text-foreground text-lg font-semibold">
               There was en error loading the challenge detail. {error.message}
@@ -90,7 +93,7 @@ export default function ChallengeScreen() {
               {/* EURØP Staked */}
               <Text className="text-start text-foreground text-md font-bold">🪵 Staked</Text>
               <Text className="text-start text-foreground text-md">
-                {data?.volume ? `${data.volume} EURØP` : 'No EURØP staked yet'}
+                {data?.volume ? `${formatEther(data.volume)} EURØP` : 'No EURØP staked yet'}
               </Text>
               {/* Time Left */}
               <Text className="text-start text-foreground text-md font-bold">⏳ Time Left</Text>

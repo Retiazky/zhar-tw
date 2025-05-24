@@ -34,13 +34,14 @@ export default function ActiveChallengesScreen() {
 
   return (
     <SafeAreaView className="bg-background flex-1">
-      <View className="p-4 gap-8">
+      <View className="p-4">
         <ModalHeader
           title="Active Challenges"
           leftIcon={<X size={24} color={Colors.dark.icon} />}
           onLeftIconPress={() => router.back()}
         />
-
+      </View>
+      <View className="p-4 gap-8">
         <FlatList
           contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
           data={data}
