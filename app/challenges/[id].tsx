@@ -42,7 +42,7 @@ export default function ChallengeScreen() {
   }, [data]);
 
   const role = useMemo(() => {
-    if (data?.zharrior.id === account?.address) {
+    if (data?.zharrior.id.toLowerCase() === account?.address.toLowerCase()) {
       return 'zharrior';
     } else {
       return 'ember';
