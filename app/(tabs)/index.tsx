@@ -63,7 +63,9 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
+      setTimeout(() => {
+        refetch();
+      }, 1000); // Refetch after 1 second to ensure data is fresh
     }, [refetch]),
   );
 

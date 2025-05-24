@@ -27,6 +27,9 @@ export interface Deposit {
   blockNumber: number;
   createdAt: string;
   txHash: string;
+  stoker: {
+    id: string;
+  };
 }
 export type ChallengeStatus =
   | 'Active'

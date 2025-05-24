@@ -14,6 +14,7 @@ export function useAIService() {
       method: 'POST',
       body: { situation },
     });
+    console.log('AI Score Response:', resp);
     return resp.score;
   };
 

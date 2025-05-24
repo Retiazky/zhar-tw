@@ -1,3 +1,4 @@
+import ChallengeCard from '@/components/ChallengeCard';
 import { LabeledInput } from '@/components/LabeledInput';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,12 +14,13 @@ import { Text } from '@/components/ui/text';
 import { client, zharChallengesContract } from '@/constants/thirdweb';
 import useGraphService from '@/hooks/services/useGraphService';
 import { WALLETS } from '@/lib/constants';
+import { parseDescription } from '@/lib/parser';
 import { checkIfRegistered } from '@/lib/utils';
-import { ProfileChallengeStatus } from '@/types/challenge';
+import { Challenge, ProfileChallengeStatus } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
 import { Address, bloSvg } from 'blo';
-import { useEffect, useMemo, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FlatList, Image, ListRenderItem, SafeAreaView, View } from 'react-native';
 import { SvgFromXml } from 'react-native-svg';
 import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { baseSepolia } from 'thirdweb/chains';
@@ -97,131 +99,259 @@ export default function ProfileScreen() {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   }, [data]);
 
+  const { data: challenges, error } = useQuery({
+    queryKey: ['challenges', account],
+    queryFn: async () => await graphService.getChallenges('createdAt', 'DESC', account?.address),
+    retry: false,
+  });
+
+  const stokedChallenges = useMemo(() => {
+    if (!challenges) return [];
+    return challenges.filter((challenge) =>
+      challenge.deposits.some((dep) => dep.stoker.id === account?.address?.toLowerCase()),
+    );
+  }, [challenges, account]);
+
+  const ignitedChallenges = useMemo(() => {
+    if (!challenges) return [];
+    return challenges.filter(
+      (challenge) => challenge.igniter.id === account?.address?.toLowerCase(),
+    );
+  }, [challenges, account]);
+
+  const activeChallenges = useMemo(() => {
+    if (!challenges) return [];
+    return challenges.filter(
+      (challenge) =>
+        challenge.status === 'Active' && challenge.zharrior.id === account?.address?.toLowerCase(),
+    );
+  }, [challenges, account]);
+
+  const completedChallenges = useMemo(() => {
+    if (!challenges) return [];
+    return challenges.filter(
+      (challenge) =>
+        challenge.status === 'Completed' &&
+        challenge.zharrior.id === account?.address?.toLowerCase(),
+    );
+  }, [challenges, account]);
+
+  const renderChallenge: ListRenderItem<Challenge> = useCallback(
+    ({ item }) => {
+      const { title } = parseDescription(item.description);
+      const address = account?.address?.toLowerCase() || '';
+      const type =
+        item.zharrior.id === address
+          ? 'zharrior'
+          : item.igniter.id === address
+            ? 'igniter'
+            : 'ember';
+      return (
+        <ChallengeCard
+          status={item.status}
+          id={item.id}
+          title={title}
+          expiresAt={new Date(item.expiration)}
+          xp={item.volume}
+          staked={item.volume}
+          type={type}
+        />
+      );
+    },
+    [account],
+  );
+
   return (
     <SafeAreaView className="bg-background flex-1">
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex-1 gap-10">
-          <Text className="text-xl font-bold text-foreground text-center">Profile</Text>
+      <View className="flex-1 gap-10">
+        <Text className="text-xl font-bold text-foreground text-center">Profile</Text>
 
-          <View className="flex-1 flex-col items-center">
-            <View className="flex-1 w-full items-center flex-col gap-5">
-              {/* Profile pic */}
-              <View className="flex items-center overflow-hidden justify-center rounded-full bg-foreground/10 p-1">
-                {account ? (
-                  <SvgFromXml xml={bloSvg(account.address as Address)} />
-                ) : (
-                  <Image source={require('@/assets/images/zhar-clear.png')} className="w-40 h-40" />
-                )}
-              </View>
-
-              {/* Nickname, Joined Date, Fire XP */}
-              {account && (
-                <View className="items-center justify-center">
-                  <Text className="text-foreground text-lg font-semibold">
-                    {data?.name ?? 'Ember'}
-                  </Text>
-                  <Text className="text-foreground/50 text-sm">Joined {joinedDate}</Text>
-                  <Text className="text-foreground/50 text-sm">{data?.totalXp ?? 0} 🔥 XP</Text>
-                </View>
-              )}
-
-              {/* Wallet connection */}
-              <View className="w-full items-center">
-                {!account && (
-                  <View className="flex-1 items-center justify-center">
-                    <Text className="text-foreground text-lg font-semibold">
-                      Connect your wallet to see your profile
-                    </Text>
-                  </View>
-                )}
-                <View className="w-full flex flex-col gap-4 p-4">
-                  <ConnectButton
-                    client={client}
-                    theme={'light'}
-                    wallets={WALLETS}
-                    chain={baseSepolia}
-                  />
-                  {account && !isRegistered && !loading && (
-                    <Button
-                      variant="outline"
-                      onPress={() => setDialogOpen(true)}
-                      className="w-full min-h-[50px]">
-                      <Text>Register Profile</Text>
-                    </Button>
-                  )}
-                </View>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Register profile</DialogTitle>
-                      <DialogDescription>
-                        Register your profile to start igniting challenges and earning XP. This will
-                        create a unique profile for you on the Zhar network. Name should be at least
-                        5 characters long.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <LabeledInput
-                      label="Nickname"
-                      placeholder="Zharrior"
-                      value={newName}
-                      onChangeText={setNewName}
-                    />
-                    <DialogFooter>
-                      {errorMessage && (
-                        <Text className="text-red-500 text-sm mt-2">{errorMessage}</Text>
-                      )}
-                      <Button disabled={loading || newName.length < 5} onPress={registerCreator}>
-                        <Text>Register</Text>
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </View>
-
-              {/* Challenges */}
-              {account && (
-                <View className="w-full p-4 gap-2">
-                  <Text className="text-foreground text-lg font-semibold">Challenges</Text>
-                  <Tabs
-                    value={value}
-                    onValueChange={(val) => setValue(val as ProfileChallengeStatus)}
-                    className="w-full mx-auto flex-col gap-1.5">
-                    <TabsList className="flex-row w-full gap-4">
-                      <TabsTrigger value="ignited">Ignited</TabsTrigger>
-                      <TabsTrigger value="stoked">Stoked</TabsTrigger>
-                      <TabsTrigger value="active">Active</TabsTrigger>
-                      <TabsTrigger value="completed">Completed</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="ignited">
-                      <Text className="text-foreground/50 text-sm">
-                        You have no ignited challenges yet. You can ignite a new one in the
-                        Challenges Tab.
-                      </Text>
-                    </TabsContent>
-                    <TabsContent value="stoked">
-                      <Text className="text-foreground/50 text-sm">
-                        You have no stoked challenges yet. You can stoke on an existing one in the
-                        Challenges Tab.
-                      </Text>
-                    </TabsContent>
-                    <TabsContent value="active">
-                      <Text className="text-foreground/50 text-sm">
-                        You have currently no active challenges. Someone has to ignite a challenge
-                        on you.
-                      </Text>
-                    </TabsContent>
-                    <TabsContent value="completed">
-                      <Text className="text-foreground/50 text-sm">
-                        You have not completed any challenges yet.
-                      </Text>
-                    </TabsContent>
-                  </Tabs>
-                </View>
+        <View className="flex-1 flex-col items-center">
+          <View className="flex-1 w-full items-center flex-col gap-5">
+            {/* Profile pic */}
+            <View className="flex items-center overflow-hidden justify-center rounded-full bg-foreground/10 p-1">
+              {account ? (
+                <SvgFromXml xml={bloSvg(account.address as Address)} />
+              ) : (
+                <Image source={require('@/assets/images/zhar-clear.png')} className="w-40 h-40" />
               )}
             </View>
+
+            {/* Nickname, Joined Date, Fire XP */}
+            {account && (
+              <View className="items-center justify-center">
+                <Text className="text-foreground text-lg font-semibold">
+                  {data?.name ?? 'Ember'}
+                </Text>
+                <Text className="text-foreground/50 text-sm">Joined {joinedDate}</Text>
+                <Text className="text-foreground/50 text-sm">{data?.totalXp ?? 0} 🔥 XP</Text>
+              </View>
+            )}
+
+            {/* Wallet connection */}
+            <View className="w-full items-center">
+              {!account && (
+                <View className="flex-1 items-center justify-center">
+                  <Text className="text-foreground text-lg font-semibold">
+                    Connect your wallet to see your profile
+                  </Text>
+                </View>
+              )}
+              <View className="w-full flex flex-col gap-4 p-4">
+                <ConnectButton
+                  client={client}
+                  theme={'light'}
+                  wallets={WALLETS}
+                  chain={baseSepolia}
+                />
+                {account && !isRegistered && !loading && (
+                  <Button
+                    variant="outline"
+                    onPress={() => setDialogOpen(true)}
+                    className="w-full min-h-[50px]">
+                    <Text>Register Profile</Text>
+                  </Button>
+                )}
+              </View>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Register profile</DialogTitle>
+                    <DialogDescription>
+                      Register your profile to start igniting challenges and earning XP. This will
+                      create a unique profile for you on the Zhar network. Name should be at least 5
+                      characters long.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <LabeledInput
+                    label="Nickname"
+                    placeholder="Zharrior"
+                    value={newName}
+                    onChangeText={setNewName}
+                  />
+                  <DialogFooter>
+                    {errorMessage && (
+                      <Text className="text-red-500 text-sm mt-2">{errorMessage}</Text>
+                    )}
+                    <Button disabled={loading || newName.length < 5} onPress={registerCreator}>
+                      <Text>Register</Text>
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </View>
+
+            {/* Challenges */}
+            {account && (
+              <View className="w-full p-4 gap-2">
+                <Text className="text-foreground text-lg font-semibold">Challenges</Text>
+                <Tabs
+                  value={value}
+                  onValueChange={(val) => setValue(val as ProfileChallengeStatus)}
+                  className="w-full mx-auto flex-col gap-1.5">
+                  <TabsList className="flex-row w-full gap-4">
+                    <TabsTrigger value="ignited">Ignited</TabsTrigger>
+                    <TabsTrigger value="stoked">Stoked</TabsTrigger>
+                    <TabsTrigger value="active">Active</TabsTrigger>
+                    <TabsTrigger value="completed">Completed</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="ignited">
+                    <FlatList
+                      contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
+                      data={ignitedChallenges}
+                      keyExtractor={(item) => item.id}
+                      renderItem={renderChallenge}
+                      ListHeaderComponent={() => {
+                        return (
+                          error && (
+                            <Text className="text-foreground text-lg font-semibold">
+                              Error loading challenges: {error.message}
+                            </Text>
+                          )
+                        );
+                      }}
+                      ListEmptyComponent={() => (
+                        <Text className="text-foreground/50 text-sm">
+                          You have no ignited challenges yet. You can ignite a new one in the
+                          Challenges Tab.
+                        </Text>
+                      )}
+                    />
+                  </TabsContent>
+                  <TabsContent value="stoked">
+                    <FlatList
+                      contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
+                      data={stokedChallenges}
+                      keyExtractor={(item) => item.id}
+                      renderItem={renderChallenge}
+                      ListHeaderComponent={() => {
+                        return (
+                          error && (
+                            <Text className="text-foreground text-lg font-semibold">
+                              Error loading challenges: {error.message}
+                            </Text>
+                          )
+                        );
+                      }}
+                      ListEmptyComponent={() => (
+                        <Text className="text-foreground/50 text-sm">
+                          You have no stoked challenges yet. You can stoke on an existing one in the
+                          Challenges Tab.
+                        </Text>
+                      )}
+                    />
+                  </TabsContent>
+                  <TabsContent value="active">
+                    <FlatList
+                      contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
+                      data={activeChallenges}
+                      keyExtractor={(item) => item.id}
+                      renderItem={renderChallenge}
+                      ListHeaderComponent={() => {
+                        return (
+                          error && (
+                            <Text className="text-foreground text-lg font-semibold">
+                              Error loading challenges: {error.message}
+                            </Text>
+                          )
+                        );
+                      }}
+                      ListEmptyComponent={() => (
+                        <Text className="text-foreground/50 text-sm">
+                          You have currently no active challenges. Someone has to ignite a challenge
+                          on you.
+                        </Text>
+                      )}
+                    />
+                  </TabsContent>
+                  <TabsContent value="completed">
+                    <FlatList
+                      contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
+                      data={completedChallenges}
+                      keyExtractor={(item) => item.id}
+                      renderItem={renderChallenge}
+                      ListHeaderComponent={() => {
+                        return (
+                          error && (
+                            <Text className="text-foreground text-lg font-semibold">
+                              Error loading challenges: {error.message}
+                            </Text>
+                          )
+                        );
+                      }}
+                      ListEmptyComponent={() => (
+                        <Text className="text-foreground/50 text-sm">
+                          You have not completed any challenges yet.
+                        </Text>
+                      )}
+                    />
+                  </TabsContent>
+                </Tabs>
+              </View>
+            )}
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

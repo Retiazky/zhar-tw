@@ -9,9 +9,9 @@ import { zharChallengesContract } from '@/constants/thirdweb';
 import useGraphService from '@/hooks/services/useGraphService';
 import { parseDescription } from '@/lib/parser';
 import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Linking, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { useActiveAccount } from 'thirdweb/react';
@@ -29,11 +29,23 @@ export default function ChallengeScreen() {
   const [stokeDialogOpen, setStokeDialogOpen] = useState(false);
   const [proofDialogOpen, setProofDialogOpen] = useState(false);
 
-  const { data, error } = useQuery({
+  const {
+    data,
+    error,
+    refetch: refetchChallenge,
+  } = useQuery({
     queryKey: ['challenge', params.id],
     queryFn: async () => await graphService.getChallenge(params.id),
     retry: false,
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchChallenge().catch((e) => {
+        console.error('Error refetching challenge:', e);
+      });
+    }, [refetchChallenge]),
+  );
 
   const { title, description } = useMemo(() => {
     if (data) {

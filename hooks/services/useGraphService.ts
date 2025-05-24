@@ -97,6 +97,9 @@ export default function useGraphService() {
                 createdAt
                 id
                 txHash
+                stoker {
+                    id
+                }
             }
             igniter {
                 id
