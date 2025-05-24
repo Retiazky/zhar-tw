@@ -22,7 +22,6 @@ export const LabeledInput = ({ label, placeholder, bottomNote, value, onChangeTe
         autoComplete="off"
         autoCorrect={false}
         numberOfLines={1}
-        // 🐈  💸
         multiline={false}
         className="text-ellipsis"
         scrollEnabled={true}
