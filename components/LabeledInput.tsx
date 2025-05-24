@@ -21,6 +21,12 @@ export const LabeledInput = ({ label, placeholder, bottomNote, value, onChangeTe
         onChangeText={onChangeText}
         autoComplete="off"
         autoCorrect={false}
+        numberOfLines={1}
+        // 🐈  💸
+        multiline={false}
+        className="text-ellipsis"
+        scrollEnabled={true}
+        style={{ overflow: 'hidden' }}
       />
       {bottomNote && <Text className="text-sm text-muted-foreground">{bottomNote}</Text>}
     </View>
