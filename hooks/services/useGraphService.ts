@@ -78,11 +78,11 @@ export default function useGraphService() {
   const getChallenges = async (
     sortField: SortChallengesField,
     direction: SortDirection,
-    active: boolean = false,
+    address?: string,
   ) => {
     const query = `
-    query GetChallenges {
-        challenges(orderBy: ${sortField}_${direction}, ${active ? 'where: { status_eq: Active }' : ''}) {
+    query GetChallenges ${address ? '($id: String!)' : ''} {
+        challenges(orderBy: ${sortField}_${direction} ${address ? ', where: { status_eq: Active,zharrior: {id_eq: $id}, OR: {igniter: {id_eq: $id}} }' : ''}) {
             id
             amount
             blockNumber
@@ -98,16 +98,24 @@ export default function useGraphService() {
                 id
                 txHash
             }
+            igniter {
+                id
+            }
+            zharrior {
+                id
+            }
             status
             updatedAt
             uri
             volume
         }
     }`;
+
+    console.log('Address:', address);
     try {
       const resp = await api<GetChallengesResponse>('/graphql', {
         method: 'POST',
-        body: { query, operationName: 'GetChallenges', variables: null },
+        body: { query, operationName: 'GetChallenges', variables: { id: address?.toLowerCase() } },
       });
       return resp.data.challenges;
     } catch (e) {

@@ -11,8 +11,9 @@ type Props = {
   xp: bigint;
   staked: bigint;
   expiresAt: Date;
+  type?: 'ember' | 'igniter' | 'zharrior';
 };
-const ChallengeCard: React.FC<Props> = ({ id, title, xp, staked, expiresAt }) => {
+const ChallengeCard: React.FC<Props> = ({ id, title, xp, staked, expiresAt, type = 'ember' }) => {
   return (
     <TouchableOpacity
       onPress={() => router.push(`/challenges/${id}`)}
@@ -27,10 +28,21 @@ const ChallengeCard: React.FC<Props> = ({ id, title, xp, staked, expiresAt }) =>
           Staked: {formatEther(staked)} EURØP
         </Text>
       </View>
-      <View className="flex flex-row items-center  gap-1">
-        <Text className="text-md text-white">{formatEther(xp)}</Text>
-        <Text className="text-sm ">🔥</Text>
-        <Text className="text-md text-white">XP</Text>
+      <View className="flex flex-col gap-2 items-end ">
+        {type !== 'ember' ? (
+          <View className="rounded-full flex items-center justify-center h-[24px] bg-secondary px-2">
+            <Text className="text-xs text-secondary-foreground">
+              {type === 'igniter' ? 'Igniter' : 'Zharrior'}
+            </Text>
+          </View>
+        ) : (
+          <View className=" h-[24px]" />
+        )}
+        <View className="flex flex-row items-center  gap-1">
+          <Text className="text-md text-white">{formatEther(xp)}</Text>
+          <Text className="text-sm ">🔥</Text>
+          <Text className="text-md text-white">XP</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );

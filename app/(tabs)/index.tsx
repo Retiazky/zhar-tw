@@ -37,7 +37,7 @@ export default function HomeScreen() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
 
   const { data, error, refetch } = useQuery({
-    queryKey: ['challenges', sortField, sortDirection],
+    queryKey: ['challenges', sortField, sortDirection, account],
     queryFn: async () => await graphService.getChallenges(sortField, sortDirection),
     retry: false,
   });
@@ -73,6 +73,9 @@ export default function HomeScreen() {
 
   const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
     const { title } = parseDescription(item.description);
+    const address = account?.address?.toLowerCase() || '';
+    const type =
+      item.zharrior.id === address ? 'zharrior' : item.igniter.id === address ? 'igniter' : 'ember';
     return (
       <ChallengeCard
         id={item.id}
@@ -80,6 +83,7 @@ export default function HomeScreen() {
         expiresAt={new Date(item.expiration)}
         xp={item.volume}
         staked={item.volume}
+        type={type}
       />
     );
   }, []);
