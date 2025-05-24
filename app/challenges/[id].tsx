@@ -1,5 +1,6 @@
 import CountdownTimer from '@/components/CountdownTimer';
 import { ModalHeader } from '@/components/ModalHeader';
+import StokeDialog from '@/components/StokeDialog';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/Colors';
@@ -8,7 +9,7 @@ import { parseDescription } from '@/lib/parser';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useActiveAccount } from 'thirdweb/react';
 
@@ -18,9 +19,10 @@ type Params = {
 
 export default function ChallengeScreen() {
   const account = useActiveAccount();
-  console.log('account', account);
   const graphService = useGraphService();
   const params = useLocalSearchParams<Params>();
+
+  const [stokeDialogOpen, setStokeDialogOpen] = useState(false);
 
   const { data, error } = useQuery({
     queryKey: ['challenge', params.id],
@@ -112,7 +114,16 @@ export default function ChallengeScreen() {
               This challenge is expired ⌛
             </Text>
           ) : (
-            <Button className="w-full" variant="default" onPress={() => {}}>
+            <Button
+              className="w-full"
+              variant="default"
+              onPress={() => {
+                if (role === 'zharrior') {
+                  // handle proof submission
+                } else {
+                  setStokeDialogOpen(true);
+                }
+              }}>
               <Text className="text-md text-black">
                 {role === 'zharrior' ? '🧾 Submit Proof' : '🪵 Stoke'}
               </Text>
@@ -120,6 +131,7 @@ export default function ChallengeScreen() {
           )}
         </View>
       </ScrollView>
+      <StokeDialog open={true} onClose={() => setStokeDialogOpen(false)} />
     </SafeAreaView>
   );
 }
