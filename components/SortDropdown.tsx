@@ -66,7 +66,7 @@ const SortDropdown: React.FC<Props> = ({ fields, onChange }) => {
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="w-[170px] bg-transparent border-none">
+        <DropdownMenuContent className="w-[170px] bg-background border-none">
           <DropdownMenuLabel>Sort By</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {fields.map((field) => (

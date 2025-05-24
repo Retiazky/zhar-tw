@@ -1,4 +1,5 @@
 import ChallengeCard from '@/components/ChallengeCard';
+import SortDropdown from '@/components/SortDropdown';
 import { Button } from '@/components/ui/button';
 import { Colors } from '@/constants/Colors';
 import useGraphService from '@/hooks/services/useGraphService';
@@ -7,11 +8,14 @@ import { Challenge } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { FlameIcon, Plus } from 'lucide-react-native';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   const graphService = useGraphService();
+
+  const [sortField, setSortField] = useState('date');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const { data, error } = useQuery({
     queryKey: ['challenges'],
@@ -40,7 +44,7 @@ export default function HomeScreen() {
     <SafeAreaView className="bg-background flex-1">
       <View className="w-full justify-between px-4 flex-row flex items-center">
         <View className="w-[40px]" />
-        <Text className="text-xl font-bold text-foreground text-center p-2">Challenges</Text>
+        <Text className="text-xl font-bold text-foreground text-center">Challenges</Text>
         <Button variant="ghost" onPress={() => router.push('/challenges/active')}>
           <FlameIcon
             size={24}
@@ -49,6 +53,18 @@ export default function HomeScreen() {
           />
         </Button>
       </View>
+
+      <SortDropdown
+        fields={[
+          { key: 'date', label: '🗓️ Date ignited' },
+          { key: 'xp', label: '🔥 XP' },
+          { key: 'staked', label: '💰 Staked' },
+        ]}
+        onChange={(field, direction) => {
+          setSortField(field);
+          setSortDirection(direction);
+        }}
+      />
 
       <FlatList
         contentContainerStyle={{ gap: 10, paddingHorizontal: 4 }}
