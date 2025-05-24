@@ -1,4 +1,3 @@
-// components/StokeDialog.tsx
 import { Colors } from '@/constants/Colors';
 import { europContract, zharChallengesContract } from '@/constants/thirdweb';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
