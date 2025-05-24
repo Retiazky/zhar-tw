@@ -34,6 +34,7 @@ export default function EmbersScreen() {
       <Text className="text-xl font-bold text-foreground text-center py-2">Embers</Text>
 
       <View className="w-full p-4">
+        {/* TODO: logic */}
         <SearchBar />
       </View>
 
