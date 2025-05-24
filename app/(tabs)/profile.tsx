@@ -44,6 +44,10 @@ export default function ProfileScreen() {
     checkIfRegistered(account.address)
       .then((res) => {
         setIsRegistered(res);
+        if (!res) {
+          setNewName('');
+          setDialogOpen(true);
+        }
         setLoading(false);
       })
       .catch((e) => {
@@ -71,6 +75,7 @@ export default function ProfileScreen() {
         transaction,
         account,
       });
+      setDialogOpen(false);
     } catch (e) {
       console.error('Error registering profile:', e);
       setErrorMessage('Failed to register profile. Please try again.');

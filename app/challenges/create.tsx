@@ -5,15 +5,16 @@ import { ModalHeader } from '@/components/ModalHeader';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/Colors';
-import { zharChallengesContract } from '@/constants/thirdweb';
+import { europContract, zharChallengesContract } from '@/constants/thirdweb';
 import { stringifyDescription } from '@/lib/parser';
 import { checkIfRegistered } from '@/lib/utils';
 import { router } from 'expo-router';
 import { X } from 'lucide-react-native';
 import { useState } from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
-import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
+import { prepareContractCall, PreparedTransaction, sendBatchTransaction } from 'thirdweb';
 import { useActiveAccount } from 'thirdweb/react';
+import { isAddress, parseEther } from 'viem';
 
 export default function CreateChallengeScreen() {
   const [title, setTitle] = useState<string>('');
@@ -31,6 +32,38 @@ export default function CreateChallengeScreen() {
       setErrorMessage('Please connect your wallet first.');
       return;
     }
+    // Validate inputs
+    if (!title.trim() || !description.trim() || !zharrior.trim() || !ignation.trim()) {
+      setErrorMessage('Please fill in all fields.');
+      return;
+    }
+    // Date must be at least 36h in the future
+    const minExpireDate = new Date(Date.now() + 36 * 60 * 60 * 1000);
+    if (expireDate < minExpireDate) {
+      setErrorMessage('Expire date must be at least 36 hours in the future.');
+      return;
+    }
+    // Title must be at least 5 characters
+    if (title.length < 5) {
+      setErrorMessage('Title must be at least 5 characters long.');
+      return;
+    }
+    // Description must be at least 10 characters
+    if (description.length < 10) {
+      setErrorMessage('Description must be at least 10 characters long.');
+      return;
+    }
+    // Zharrior must be a valid address
+    if (!isAddress(zharrior)) {
+      setErrorMessage('Zharrior must be a valid Ethereum address.');
+      return;
+    }
+    // Ignation must be a valid number and at least 10 EURØP
+    const ignationValue = parseFloat(ignation);
+    if (isNaN(ignationValue) || ignationValue < 10) {
+      setErrorMessage('Ignation must be a valid number and at least 10 EURØP.');
+      return;
+    }
     setErrorMessage(null);
     setLoading(true);
     if (!(await checkIfRegistered(account.address))) {
@@ -41,26 +74,35 @@ export default function CreateChallengeScreen() {
     try {
       const rawDescription = stringifyDescription(title, description);
       console.log('Preparing transaction to create challenge...');
-      const transaction = prepareContractCall({
+      let ign = parseEther(ignation);
+      const approveTx = prepareContractCall({
+        contract: europContract,
+        method: 'approve',
+        params: [zharChallengesContract.address, ign],
+      });
+
+      const createChallengeTx = prepareContractCall({
         contract: zharChallengesContract,
         method: 'createChallenge',
         params: [
           zharrior,
           rawDescription,
-          BigInt(expireDate.getTime() / 1000),
+          BigInt(Math.round(expireDate.getTime() / 1000)),
           BigInt(7000),
           BigInt(86400 * 2),
+          ign,
         ],
       });
       console.log('Sending transaction to create challenge...');
-      const recipe = await sendAndConfirmTransaction({
-        transaction,
+      const recipe = await sendBatchTransaction({
+        transactions: [approveTx, createChallengeTx] as PreparedTransaction[],
         account,
       });
       console.log('Challenge created successfully:', recipe);
+      router.back();
     } catch (e) {
-      console.error('Error registering profile:', e);
-      setErrorMessage('Failed to register profile. Please try again.');
+      console.error('Error creating challenge:', e);
+      setErrorMessage('Failed to create challenge. Please try again.');
     } finally {
       setLoading(false);
     }

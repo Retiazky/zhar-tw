@@ -9,7 +9,7 @@ import { parseDescription } from '@/lib/parser';
 import { checkIfRegistered } from '@/lib/utils';
 import { Challenge } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { FlameIcon, Plus } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, View } from 'react-native';
@@ -28,7 +28,7 @@ export default function HomeScreen() {
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
-  const { data, error } = useQuery({
+  const { data, error, refetch } = useQuery({
     queryKey: ['challenges'],
     queryFn: async () => await graphService.getChallenges(),
     retry: false,
@@ -52,6 +52,12 @@ export default function HomeScreen() {
         setLoading(false);
       });
   }, [account]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   const hasActiveChallenges = useMemo(() => {
     return data?.some((challenge) => challenge.status === 'Active') ?? false;
