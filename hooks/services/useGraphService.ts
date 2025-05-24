@@ -7,41 +7,57 @@ const api = ofetch.create({
 
 type GetChallengeResponse = {
   data: {
-    challenge: Challenge;
+    challengeById: Challenge;
   };
 };
 
 export default function useGraphService() {
   const getChallenge = async (id: string) => {
     const query = `query GetChallenge($id: String!) {
-        challenge(id: $id) {
+        challengeById(id: $id) {
+          id
+          blockNumber
+          description
+          expiration
+          contract
+          createdAt
+          depositCount
+          deposits {
             id
             amount
             blockNumber
-            description
-            contract
-            expiration
             createdAt
-            depositCount
-            deposits {
-                amount
-                blockNumber
-                createdAt
-                id
-                txHash
-            }
-            status
+            txHash
+          }
+          status
+          updatedAt
+          uri
+          amount
+          reward
+          volume
+          disputePeriod
+          igniter {
+            id
+            createdAt
+            blockNumber
+            name
             updatedAt
-            uri
-            volume
+          }
+          zharrior {
+            id
+            createdAt
+            blockNumber
+            name
+            updatedAt
+          }
         }
-        }}`;
+      }`;
     try {
       const resp = await api<GetChallengeResponse>('/graphql', {
         method: 'POST',
         body: { query, operationName: 'GetChallenge', variables: { id } },
       });
-      return resp.data.challenge;
+      return resp.data.challengeById;
     } catch (e) {
       console.error('Error fetching challenge:', e);
       throw e;
