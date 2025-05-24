@@ -196,7 +196,7 @@ export default function ChallengeScreen() {
                 </>
               )}
               {/* Dispute Period */}
-              {disputeDate && data?.status === 'Active' && (
+              {disputeDate && (data?.status === 'Active' || data?.status === 'ProofSubmitted') && (
                 <>
                   <Text className="text-start text-foreground text-md font-bold">
                     ⏳ Dispute Time Left
