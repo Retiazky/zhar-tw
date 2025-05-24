@@ -1,5 +1,6 @@
 import CountdownTimer from '@/components/CountdownTimer';
 import { ModalHeader } from '@/components/ModalHeader';
+import ProofDialog from '@/components/ProofDialog';
 import StokeDialog from '@/components/StokeDialog';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
@@ -26,6 +27,7 @@ export default function ChallengeScreen() {
   const params = useLocalSearchParams<Params>();
 
   const [stokeDialogOpen, setStokeDialogOpen] = useState(false);
+  const [proofDialogOpen, setProofDialogOpen] = useState(false);
 
   const { data, error } = useQuery({
     queryKey: ['challenge', params.id],
@@ -156,7 +158,7 @@ export default function ChallengeScreen() {
                 variant="default"
                 onPress={() => {
                   if (role === 'zharrior') {
-                    // handle proof submission
+                    setProofDialogOpen(true);
                   } else {
                     setStokeDialogOpen(true);
                   }
@@ -182,6 +184,11 @@ export default function ChallengeScreen() {
         challengeId={params.id}
         open={stokeDialogOpen}
         onClose={() => setStokeDialogOpen(false)}
+      />
+      <ProofDialog
+        challengeId={params.id}
+        open={proofDialogOpen}
+        onClose={() => setProofDialogOpen(false)}
       />
     </SafeAreaView>
   );
