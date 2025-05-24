@@ -15,6 +15,8 @@ export default function StokeDialog({ onClose, open }: Props) {
 
   const snapPoints = useMemo(() => ['40%'], []);
 
+  console.log('StokeDialog rendered', { open });
+
   useEffect(() => {
     if (open) {
       bottomSheetModalRef.current?.present();

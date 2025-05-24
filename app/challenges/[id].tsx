@@ -12,6 +12,7 @@ import { X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useActiveAccount } from 'thirdweb/react';
+import { formatEther } from 'viem';
 
 type Params = {
   id: string;
@@ -90,7 +91,7 @@ export default function ChallengeScreen() {
               {/* EURØP Staked */}
               <Text className="text-start text-foreground text-md font-bold">🪵 Staked</Text>
               <Text className="text-start text-foreground text-md">
-                {data?.volume ? `${data.volume} EURØP` : 'No EURØP staked yet'}
+                {data?.volume ? `${formatEther(data.volume)} EURØP` : 'No EURØP staked yet'}
               </Text>
               {/* Time Left */}
               <Text className="text-start text-foreground text-md font-bold">⏳ Time Left</Text>
