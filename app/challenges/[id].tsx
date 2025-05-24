@@ -8,13 +8,17 @@ import { parseDescription } from '@/lib/parser';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
-import { SafeAreaView, ScrollView, View } from 'react-native';
+import { useMemo } from 'react';
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { useActiveAccount } from 'thirdweb/react';
 
 type Params = {
   id: string;
 };
 
 export default function ChallengeScreen() {
+  const account = useActiveAccount();
+  console.log('account', account);
   const graphService = useGraphService();
   const params = useLocalSearchParams<Params>();
 
@@ -24,9 +28,23 @@ export default function ChallengeScreen() {
     retry: false,
   });
 
-  const { title, description } = data
-    ? parseDescription(data.description)
-    : { title: 'Loading...', description: 'Loading...' };
+  const { title, description } = useMemo(() => {
+    if (data) {
+      return parseDescription(data.description);
+    }
+    return {
+      title: 'Loading the title...',
+      description: 'Loading the description...',
+    };
+  }, [data]);
+
+  const role = useMemo(() => {
+    if (data?.zharrior.id === account?.address) {
+      return 'zharrior';
+    } else {
+      return 'ember';
+    }
+  }, [data, account]);
 
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
@@ -48,11 +66,18 @@ export default function ChallengeScreen() {
               {/* Description  */}
               <Text className="text-start text-foreground text-md">{description}</Text>
               {/* Igniter */}
+              {/* TODO: OPEN PROFILE */}
               <Text className="text-start text-foreground text-md font-bold">🔥 Igniter</Text>
-              <Text className="text-start text-foreground text-md">{data?.igniter.id}</Text>
+              <TouchableOpacity onPress={() => console.log('Igniter pressed')}>
+                <Text className="text-start text-primary underline">{data?.igniter.id}</Text>
+              </TouchableOpacity>
               {/* Zharrior */}
+              {/* TODO: OPEN PROFILE */}
               <Text className="text-start text-foreground text-md font-bold">🧑🏻‍🚀 Zharrior</Text>
-              <Text className="text-start text-foreground text-md">{data?.zharrior.id}</Text>
+              <TouchableOpacity onPress={() => console.log('Zharrior pressed')}>
+                <Text className="text-start text-primary underline">{data?.zharrior.id}</Text>
+              </TouchableOpacity>
+
               {/* Number of Stokers */}
               <Text className="text-start text-foreground text-md font-bold">
                 👥 Number of Stokers
@@ -78,9 +103,21 @@ export default function ChallengeScreen() {
           )}
         </View>
         <View className="p-4 bottom-0">
-          <Button className="w-full" variant="default" onPress={() => {}}>
-            <Text className="text-md  text-black">Stoke</Text>
-          </Button>
+          {!account ? (
+            <Text className="text-foreground text-sm text-center mt-2">
+              Connect your wallet to stoke the challenge or submit proof if you're the Zharrior.
+            </Text>
+          ) : new Date(data?.expiration || '') < new Date() ? (
+            <Text className="text-foreground text-center font-medium">
+              This challenge is expired ⌛
+            </Text>
+          ) : (
+            <Button className="w-full" variant="default" onPress={() => {}}>
+              <Text className="text-md text-black">
+                {role === 'zharrior' ? '🧾 Submit Proof' : '🪵 Stoke'}
+              </Text>
+            </Button>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
