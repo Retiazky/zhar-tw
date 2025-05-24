@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { memo, useMemo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { formatEther } from 'viem';
+import CountdownTimer from './CountdownTimer';
 
 type Props = {
   id: string;
@@ -25,7 +26,10 @@ const ChallengeCard: React.FC<Props> = ({ id, title, xp, staked, expiresAt }) =>
       className="w-full flex flex-row justify-between p-2">
       <View className="flex flex-col">
         <Text className="text-lg text-white font-semibold">{title}</Text>
-        <Text className="text-sm text-secondary-foreground">Time Left: {expiresIn}</Text>
+        <View className="flex flex-row items-center gap-2">
+          <Text className="text-sm text-secondary-foreground">Time Left:</Text>
+          <CountdownTimer expiration={expiresAt.toISOString()} flat />
+        </View>
         <Text className="text-sm text-secondary-foreground">
           Staked: {formatEther(staked)} EURØP
         </Text>

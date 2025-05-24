@@ -12,10 +12,10 @@ export interface Ember {
 }
 
 export interface Deposit {
+  id: string;
   amount: number;
   blockNumber: number;
   createdAt: string;
-  id: string;
   txHash: string;
 }
 export type ChallengeStatus =
@@ -30,7 +30,6 @@ export type ProfileChallengeStatus = 'ignited' | 'stoked' | 'active' | 'complete
 
 export interface Challenge {
   id: string;
-  amount: number;
   blockNumber: number;
   description: string;
   expiration: string;
@@ -41,5 +40,9 @@ export interface Challenge {
   status: ChallengeStatus;
   updatedAt: string;
   uri: string;
-  volume: bigint;
+  reward: number; // how many % goes to the zharrior (eg 7000 = 70%)
+  volume: bigint; // total amount staked in the challenge
+  disputePeriod: string; // in seconds
+  igniter: Ember;
+  zharrior: Ember;
 }

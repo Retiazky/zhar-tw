@@ -46,7 +46,7 @@ const SortDropdown: React.FC<Props> = ({ fields, onChange }) => {
   const selectedLabel = fields.find((f) => f.key === sortField)?.label ?? '';
 
   return (
-    <View className="flex-row gap-2 px-4 items-center">
+    <View className="flex-row gap-2 items-center">
       <Button variant="ghost" size="icon" onPress={() => toggleDirection(sortField)}>
         {sortDirection === 'asc' ? (
           <SortDesc size={20} color={Colors.dark.icon} />

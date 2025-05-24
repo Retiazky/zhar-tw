@@ -110,11 +110,6 @@ export default function HomeScreen() {
             )
           );
         }}
-        ListEmptyComponent={() => (
-          <Text className="text-foreground text-lg text-center font-semibold">
-            No challenges available.
-          </Text>
-        )}
       />
       {account && isRegistered && !loading && !accountLoading && (
         <Button
