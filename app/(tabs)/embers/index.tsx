@@ -16,16 +16,18 @@ export default function EmbersScreen() {
         <SearchBar />
       </View>
 
-      <SortDropdown
-        fields={[
-          { key: 'date', label: '🗓️ Date joined' },
-          { key: 'xp', label: '🔥 XP' },
-        ]}
-        onChange={(field, direction) => {
-          setSortField(field);
-          setSortDirection(direction);
-        }}
-      />
+      <View className="px-4">
+        <SortDropdown
+          fields={[
+            { key: 'date', label: '🗓️ Date joined' },
+            { key: 'xp', label: '🔥 XP' },
+          ]}
+          onChange={(field, direction) => {
+            setSortField(field);
+            setSortDirection(direction);
+          }}
+        />
+      </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
         <View className="flex-1 gap-10">{/* TODO: Profiles */}</View>
