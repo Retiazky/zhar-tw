@@ -11,18 +11,18 @@ type Props = {
   onChangeText: (text: string) => void;
 };
 
-export const LabeledInput = (props: Props) => {
+export const LabeledInput = ({ label, placeholder, bottomNote, value, onChangeText }: Props) => {
   return (
     <View className="gap-2">
-      <Label className="text-foreground text-lg font-bold">{props.label}</Label>
+      <Label className="text-foreground text-lg font-bold">{label}</Label>
       <Input
-        placeholder={props.placeholder}
-        value={props.value}
-        onChangeText={props.onChangeText}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        autoComplete="off"
+        autoCorrect={false}
       />
-      {props.bottomNote && (
-        <Text className="text-sm text-muted-foreground">{props.bottomNote}</Text>
-      )}
+      {bottomNote && <Text className="text-sm text-muted-foreground">{bottomNote}</Text>}
     </View>
   );
 };

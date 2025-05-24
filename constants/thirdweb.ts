@@ -1,3 +1,4 @@
+import { EuropABI, EuropAddress } from '@/lib/abis/Europ';
 import { ZharChallengesABI, ZharChallengesAddress } from '@/lib/abis/ZharChallenges';
 import { createThirdwebClient, getContract } from 'thirdweb';
 import { base, baseSepolia } from 'thirdweb/chains';
@@ -31,4 +32,11 @@ export const zharChallengesContract = getContract({
   chain: baseSepolia,
   client,
   abi: ZharChallengesABI,
+});
+
+export const europContract = getContract({
+  address: EuropAddress,
+  chain: baseSepolia,
+  client,
+  abi: EuropABI,
 });

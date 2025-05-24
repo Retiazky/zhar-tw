@@ -12,54 +12,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Text } from '@/components/ui/text';
 import { client, zharChallengesContract } from '@/constants/thirdweb';
 import useGraphService from '@/hooks/services/useGraphService';
+import { WALLETS } from '@/lib/constants';
+import { checkIfRegistered } from '@/lib/utils';
 import { ProfileChallengeStatus } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, View } from 'react-native';
-import { prepareContractCall, readContract, sendAndConfirmTransaction } from 'thirdweb';
+import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { baseSepolia } from 'thirdweb/chains';
 import { ConnectButton, useActiveAccount } from 'thirdweb/react';
-import { createWallet } from 'thirdweb/wallets';
-import { inAppWallet } from 'thirdweb/wallets/in-app';
-import { zeroAddress } from 'viem';
-
-const WALLETS = [
-  inAppWallet({
-    auth: {
-      options: ['google', 'facebook', 'discord', 'telegram', 'email', 'phone', 'passkey'],
-      passkeyDomain: 'thirdweb.com',
-    },
-    smartAccount: {
-      chain: baseSepolia,
-      sponsorGas: true,
-    },
-  }),
-  createWallet('io.metamask'),
-  createWallet('com.coinbase.wallet', {
-    appMetadata: {
-      name: 'Thirdweb RN Demo',
-    },
-    mobileConfig: {
-      callbackURL: 'com.thirdweb.demo://',
-    },
-    walletConfig: {
-      options: 'smartWalletOnly',
-    },
-  }),
-  createWallet('me.rainbow'),
-  createWallet('com.trustwallet.app'),
-  createWallet('io.zerion.wallet'),
-];
 
 export default function ProfileScreen() {
-  const account = useActiveAccount();
-
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>('');
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
   const [value, setValue] = useState<ProfileChallengeStatus>('ignited');
 
+  const account = useActiveAccount();
   const graphService = useGraphService();
   const { data } = useQuery({
     queryKey: ['profile', account?.address],
@@ -68,17 +37,6 @@ export default function ProfileScreen() {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const checkIfRegistered = async (address: string) => {
-    const [add, name, uri, isActive, totalChallengesCompleted] = await readContract({
-      contract: zharChallengesContract,
-      method: 'creators',
-      params: [address],
-    });
-    if (add !== zeroAddress || name || uri || isActive || totalChallengesCompleted) {
-      return true;
-    }
-    return false;
-  };
 
   useEffect(() => {
     if (!account) return;
@@ -86,6 +44,10 @@ export default function ProfileScreen() {
     checkIfRegistered(account.address)
       .then((res) => {
         setIsRegistered(res);
+        if (!res) {
+          setNewName('');
+          setDialogOpen(true);
+        }
         setLoading(false);
       })
       .catch((e) => {
@@ -113,6 +75,7 @@ export default function ProfileScreen() {
         transaction,
         account,
       });
+      setDialogOpen(false);
     } catch (e) {
       console.error('Error registering profile:', e);
       setErrorMessage('Failed to register profile. Please try again.');
