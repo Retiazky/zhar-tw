@@ -107,7 +107,8 @@ export default function ChallengeScreen() {
         <View className="p-4 bottom-0">
           {!account ? (
             <Text className="text-foreground text-sm text-center mt-2">
-              Connect your wallet to stoke the challenge or submit proof if you're the Zharrior.
+              Connect your wallet to stoke the challenge or submit proof if you&apos;re the
+              Zharrior.
             </Text>
           ) : new Date(data?.expiration || '') < new Date() ? (
             <Text className="text-foreground text-center font-medium">

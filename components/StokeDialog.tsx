@@ -1,7 +1,6 @@
 // components/StokeDialog.tsx
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { View } from 'react-native';
+import { useCallback, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
 

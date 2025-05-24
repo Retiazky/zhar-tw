@@ -16,8 +16,10 @@ import { WALLETS } from '@/lib/constants';
 import { checkIfRegistered } from '@/lib/utils';
 import { ProfileChallengeStatus } from '@/types/challenge';
 import { useQuery } from '@tanstack/react-query';
+import { Address, bloSvg } from 'blo';
 import { useEffect, useMemo, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, View } from 'react-native';
+import { SvgFromXml } from 'react-native-svg';
 import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { baseSepolia } from 'thirdweb/chains';
 import { ConnectButton, useActiveAccount } from 'thirdweb/react';
@@ -90,6 +92,8 @@ export default function ProfileScreen() {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   }, [data]);
 
+  console.log(bloSvg(account?.address as Address));
+
   return (
     <SafeAreaView className="bg-background flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -99,8 +103,12 @@ export default function ProfileScreen() {
           <View className="flex-1 flex-col items-center">
             <View className="flex-1 w-full items-center flex-col gap-5">
               {/* Profile pic */}
-              <View className="flex items-center  justify-center rounded-full bg-foreground/10 p-1">
-                <Image source={require('@/assets/images/zhar-clear.png')} className="w-40 h-40" />
+              <View className="flex items-center overflow-hidden justify-center rounded-full bg-foreground/10 p-1">
+                {account ? (
+                  <SvgFromXml xml={bloSvg(account.address as Address)} />
+                ) : (
+                  <Image source={require('@/assets/images/zhar-clear.png')} className="w-40 h-40" />
+                )}
               </View>
 
               {/* Nickname, Joined Date, Fire XP */}
