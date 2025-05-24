@@ -1,3 +1,4 @@
+import { ZharChallengesABI, ZharChallengesAddress } from '@/lib/abis/ZharChallenges';
 import { createThirdwebClient, getContract } from 'thirdweb';
 import { base, baseSepolia } from 'thirdweb/chains';
 
@@ -23,4 +24,11 @@ export const usdcContract = getContract({
   address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
   chain: base,
   client,
+});
+
+export const zharChallengesContract = getContract({
+  address: ZharChallengesAddress,
+  chain: baseSepolia,
+  client,
+  abi: ZharChallengesABI,
 });

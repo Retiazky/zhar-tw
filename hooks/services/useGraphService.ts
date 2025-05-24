@@ -121,9 +121,41 @@ export default function useGraphService() {
     }
   };
 
+  type GetEmberResponse = {
+    data: {
+      emberById: Ember;
+    };
+  };
+
+  const getEmber = async (address: string) => {
+    const query = `query GetEmber($address: String!) {
+        emberById(id: $address) {
+            id
+            createdAt
+            blockNumber
+            name
+            updatedAt
+            ignited {
+            id
+            }
+        }
+        }`;
+    try {
+      const resp = await api<GetEmberResponse>('/graphql', {
+        method: 'POST',
+        body: { query, operationName: 'GetEmber', variables: { address: address.toLowerCase() } },
+      });
+      return resp.data.emberById;
+    } catch (e) {
+      console.error('Error fetching embers:', e);
+      throw e;
+    }
+  };
+
   return {
     getChallenges,
     getChallenge,
     getEmbers,
+    getEmber,
   };
 }

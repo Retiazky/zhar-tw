@@ -38,7 +38,7 @@ function WriteSection() {
   const sendMutation = useSendAndConfirmTransaction();
   const balanceQuery = useReadContract(balanceOf, {
     contract,
-    owner: account?.address!,
+    owner: account!.address,
     queryOptions: { enabled: !!account },
   });
   const nftQuery = useReadContract(getNFT, {

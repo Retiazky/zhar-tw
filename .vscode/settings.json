@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
-        "Thirdweb"
+        "Thirdweb",
+        "zhar"
     ],
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
