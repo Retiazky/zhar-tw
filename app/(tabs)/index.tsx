@@ -71,22 +71,29 @@ export default function HomeScreen() {
     return data?.some((challenge) => challenge.status === 'Active') ?? false;
   }, [data]);
 
-  const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
-    const { title } = parseDescription(item.description);
-    const address = account?.address?.toLowerCase() || '';
-    const type =
-      item.zharrior.id === address ? 'zharrior' : item.igniter.id === address ? 'igniter' : 'ember';
-    return (
-      <ChallengeCard
-        id={item.id}
-        title={title}
-        expiresAt={new Date(item.expiration)}
-        xp={item.volume}
-        staked={item.volume}
-        type={type}
-      />
-    );
-  }, []);
+  const renderChallenge: ListRenderItem<Challenge> = useCallback(
+    ({ item }) => {
+      const { title } = parseDescription(item.description);
+      const address = account?.address?.toLowerCase() || '';
+      const type =
+        item.zharrior.id === address
+          ? 'zharrior'
+          : item.igniter.id === address
+            ? 'igniter'
+            : 'ember';
+      return (
+        <ChallengeCard
+          id={item.id}
+          title={title}
+          expiresAt={new Date(item.expiration)}
+          xp={item.volume}
+          staked={item.volume}
+          type={type}
+        />
+      );
+    },
+    [account],
+  );
 
   return (
     <SafeAreaView className="bg-background flex-1">
