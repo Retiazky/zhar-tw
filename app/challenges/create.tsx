@@ -89,7 +89,7 @@ export default function CreateChallengeScreen() {
           rawDescription,
           BigInt(Math.round(expireDate.getTime() / 1000)),
           BigInt(7000),
-          BigInt(86400 * 2),
+          BigInt(0),
           ign,
         ],
       });

@@ -42,6 +42,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (!account) return;
+
     setLoading(true);
     checkIfRegistered(account.address)
       .then((res) => {

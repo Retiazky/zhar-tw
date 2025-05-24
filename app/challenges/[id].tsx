@@ -5,6 +5,7 @@ import StokeDialog from '@/components/StokeDialog';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/Colors';
+import { zharChallengesContract } from '@/constants/thirdweb';
 import useGraphService from '@/hooks/services/useGraphService';
 import { parseDescription } from '@/lib/parser';
 import { useQuery } from '@tanstack/react-query';
@@ -12,6 +13,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { useActiveAccount } from 'thirdweb/react';
 import { formatEther } from 'viem';
 
@@ -51,6 +53,38 @@ export default function ChallengeScreen() {
     }
   }, [data, account]);
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const distributeRewards = async () => {
+    if (!account) {
+      console.error('No account connected');
+      return;
+    }
+    setLoading(true);
+
+    const transaction = prepareContractCall({
+      contract: zharChallengesContract,
+      method: 'claimReward',
+      params: [BigInt(params.id)],
+    });
+    console.log('Sending transaction to claim rewards...');
+    const recipe = await sendAndConfirmTransaction({
+      transaction,
+      account,
+    });
+    console.log('Challenge rewards claimed successfully:', recipe);
+    router.back();
+    setLoading(false);
+  };
+
+  const isValid = useMemo(() => {
+    if (!data) return false;
+    const updated = new Date(data.updatedAt);
+    const expiration = new Date(data.expiration);
+    if (expiration > updated) {
+      return true;
+    }
+    return false;
+  }, [data]);
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
       <View className="p-4">
@@ -118,20 +152,31 @@ export default function ChallengeScreen() {
               This challenge is expired ⌛
             </Text>
           ) : (
-            <Button
-              className="w-full"
-              variant="default"
-              onPress={() => {
-                if (role === 'zharrior') {
-                  setProofDialogOpen(true);
-                } else {
-                  setStokeDialogOpen(true);
-                }
-              }}>
-              <Text className="text-md text-black">
-                {role === 'zharrior' ? '🧾 Submit Proof' : '🪵 Stoke'}
-              </Text>
-            </Button>
+            <>
+              <Button
+                className="w-full"
+                variant="default"
+                onPress={() => {
+                  if (role === 'zharrior') {
+                    setProofDialogOpen(true);
+                  } else {
+                    setStokeDialogOpen(true);
+                  }
+                }}>
+                <Text className="text-md text-black">
+                  {role === 'zharrior' ? '🧾 Submit Proof' : '🪵 Stoke'}
+                </Text>
+              </Button>
+              {role === 'zharrior' && data?.status === 'ProofSubmitted' && isValid && (
+                <Button
+                  disabled={loading}
+                  className="w-full"
+                  variant="default"
+                  onPress={() => distributeRewards()}>
+                  <Text className="text-md text-black">Claim</Text>
+                </Button>
+              )}
+            </>
           )}
         </View>
       </ScrollView>
