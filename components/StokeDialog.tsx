@@ -3,6 +3,7 @@ import { Colors } from '@/constants/Colors';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
+import { ModalHeader } from './ModalHeader';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
 
@@ -54,7 +55,7 @@ export default function StokeDialog({ onClose, open }: Props) {
       )}>
       <BottomSheetView className="p-4 gap-4 bg-background items-center">
         {/* Title */}
-        <Text className="text-xl font-bold text-center">Stoke This Challenge</Text>
+        <ModalHeader title="Stoke This Challenge" />
 
         {/* Description */}
         <Text className="text-center">
