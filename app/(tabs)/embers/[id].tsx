@@ -41,7 +41,7 @@ export default function EmberScreen() {
         <ModalHeader
           title={data?.name ?? 'Ember'}
           leftIcon={<X size={24} color={Colors.dark.icon} />}
-          onLeftIconPress={() => router.back()}
+          onLeftIconPress={() => router.dismiss()}
         />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
