@@ -1,8 +1,13 @@
 // components/StokeDialog.tsx
 import { Colors } from '@/constants/Colors';
+import { europContract, zharChallengesContract } from '@/constants/thirdweb';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { router } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
+import { prepareContractCall, PreparedTransaction, sendBatchTransaction } from 'thirdweb';
+import { useActiveAccount } from 'thirdweb/react';
+import { parseEther } from 'viem';
 import { ModalHeader } from './ModalHeader';
 import { Button } from './ui/button';
 import { Text } from './ui/text';
@@ -10,10 +15,12 @@ import { Text } from './ui/text';
 type Props = {
   onClose: () => void;
   open: boolean;
+  challengeId: string;
 };
 
-export default function StokeDialog({ onClose, open }: Props) {
+export default function StokeDialog({ onClose, open, challengeId }: Props) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const account = useActiveAccount();
 
   const [portion, setPortion] = useState<number>(10);
 
@@ -25,10 +32,6 @@ export default function StokeDialog({ onClose, open }: Props) {
     }
   }, [open]);
 
-  const handleDismiss = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
   const incrementPortion = () => setPortion((p) => p + 1);
   const decrementPortion = () => setPortion((p) => (p > 10 ? p - 1 : 10));
 
@@ -37,6 +40,40 @@ export default function StokeDialog({ onClose, open }: Props) {
     if (!isNaN(num)) {
       setPortion(num);
     }
+  };
+
+  const handleDismiss = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const ignite = async () => {
+    if (!account) {
+      console.error('No account connected');
+      return;
+    }
+    setLoading(true);
+    let ign = parseEther(portion.toString());
+    const approveTx = prepareContractCall({
+      contract: europContract,
+      method: 'approve',
+      params: [zharChallengesContract.address, ign],
+    });
+
+    const depositTx = prepareContractCall({
+      contract: zharChallengesContract,
+      method: 'depositToChallenge',
+      params: [BigInt(challengeId), ign],
+    });
+    console.log('Sending transaction to create challenge...');
+    const recipe = await sendBatchTransaction({
+      transactions: [approveTx, depositTx] as PreparedTransaction[],
+      account,
+    });
+    console.log('Challenge stoked successfully:', recipe);
+    onClose();
+    router.back();
+    setLoading(false);
   };
 
   return (
@@ -84,10 +121,10 @@ export default function StokeDialog({ onClose, open }: Props) {
 
         {/* Stoke Button */}
         <Button
-          onPress={handleDismiss}
+          onPress={() => ignite()}
           variant="default"
           className="w-[70%]"
-          disabled={portion < 10}>
+          disabled={loading || portion < 10}>
           <Text>Stoke</Text>
         </Button>
       </BottomSheetView>

@@ -135,7 +135,11 @@ export default function ChallengeScreen() {
           )}
         </View>
       </ScrollView>
-      <StokeDialog open={stokeDialogOpen} onClose={() => setStokeDialogOpen(false)} />
+      <StokeDialog
+        challengeId={params.id}
+        open={stokeDialogOpen}
+        onClose={() => setStokeDialogOpen(false)}
+      />
     </SafeAreaView>
   );
 }

@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, Text, View } from 'react-native';
+import { useActiveAccount } from 'thirdweb/react';
 
 const FIELDS = [
   { key: 'createdAt', label: '🗓️ Date ignited' },
@@ -21,18 +22,23 @@ const FIELDS = [
 
 export default function ActiveChallengesScreen() {
   const graphService = useGraphService();
+  const account = useActiveAccount();
 
   const [sortField, setSortField] = useState<SortChallengesField>('createdAt');
   const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
 
   const { data, error } = useQuery({
-    queryKey: ['active-challenges', sortField, sortDirection],
-    queryFn: async () => await graphService.getChallenges(sortField, sortDirection, true),
+    queryKey: ['active-challenges', sortField, sortDirection, account],
+    queryFn: async () =>
+      await graphService.getChallenges(sortField, sortDirection, account?.address),
     retry: false,
   });
 
   const renderChallenge: ListRenderItem<Challenge> = useCallback(({ item }) => {
     const { title } = parseDescription(item.description);
+    const address = account?.address?.toLowerCase() || '';
+    const type =
+      item.zharrior.id === address ? 'zharrior' : item.igniter.id === address ? 'igniter' : 'ember';
     return (
       <ChallengeCard
         id={item.id}
@@ -40,6 +46,7 @@ export default function ActiveChallengesScreen() {
         expiresAt={new Date(item.expiration)}
         xp={item.volume}
         staked={item.volume}
+        type={type}
       />
     );
   }, []);
