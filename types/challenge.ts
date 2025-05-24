@@ -52,7 +52,7 @@ export interface Challenge {
   uri: string;
   reward: number; // how many % goes to the zharrior (eg 7000 = 70%)
   volume: bigint; // total amount staked in the challenge
-  disputePeriod: string; // in seconds
+  disputePeriod: number; // in seconds
   igniter: Ember;
   zharrior: Ember;
 }

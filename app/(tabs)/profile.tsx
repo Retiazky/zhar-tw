@@ -61,6 +61,10 @@ export default function ProfileScreen() {
 
   const registerCreator = async () => {
     if (!account) return;
+    if (!newName || newName.length < 5) {
+      setErrorMessage('Nickname must be at least 5 characters long.');
+      return;
+    }
     setLoading(true);
     if (await checkIfRegistered(account.address)) {
       setErrorMessage('Your profile is already registered.');
@@ -70,7 +74,7 @@ export default function ProfileScreen() {
     const transaction = prepareContractCall({
       contract: zharChallengesContract,
       method: 'registerCreator',
-      params: ['Brano', account.address],
+      params: [newName, account.address],
     });
     try {
       await sendAndConfirmTransaction({

@@ -83,6 +83,7 @@ export default function HomeScreen() {
             : 'ember';
       return (
         <ChallengeCard
+          status={item.status}
           id={item.id}
           title={title}
           expiresAt={new Date(item.expiration)}

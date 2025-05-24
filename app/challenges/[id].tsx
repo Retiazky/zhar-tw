@@ -9,10 +9,10 @@ import { zharChallengesContract } from '@/constants/thirdweb';
 import useGraphService from '@/hooks/services/useGraphService';
 import { parseDescription } from '@/lib/parser';
 import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Link, router, useLocalSearchParams } from 'expo-router';
 import { X } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Linking, SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native';
 import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { useActiveAccount } from 'thirdweb/react';
 import { formatEther } from 'viem';
@@ -54,6 +54,7 @@ export default function ChallengeScreen() {
   }, [data, account]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const distributeRewards = async () => {
     if (!account) {
       console.error('No account connected');
@@ -66,25 +67,41 @@ export default function ChallengeScreen() {
       method: 'claimReward',
       params: [BigInt(params.id)],
     });
-    console.log('Sending transaction to claim rewards...');
-    const recipe = await sendAndConfirmTransaction({
-      transaction,
-      account,
-    });
-    console.log('Challenge rewards claimed successfully:', recipe);
-    router.back();
-    setLoading(false);
+    try {
+      console.log('Sending transaction to claim rewards...');
+      const recipe = await sendAndConfirmTransaction({
+        transaction,
+        account,
+      });
+      console.log('Challenge rewards claimed successfully:', recipe);
+      router.back();
+    } catch (e) {
+      console.error('Error claiming rewards:', e);
+      setErrorMessage('Failed to claim rewards. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const disputeDate = useMemo(() => {
+    if (!data) return null;
+    const updated = new Date(data.updatedAt);
+    const dispute = new Date(updated.getTime() + data.disputePeriod * 1000);
+    return dispute;
+  }, [data]);
+
   const isValid = useMemo(() => {
-    if (!data) return false;
+    if (!data || !disputeDate) return false;
     const updated = new Date(data.updatedAt);
     const expiration = new Date(data.expiration);
-    if (expiration > updated) {
-      return true;
+    if (expiration < updated) {
+      return false;
     }
-    return false;
-  }, [data]);
+    if (disputeDate < new Date()) {
+      return false;
+    }
+    return true;
+  }, [data, disputeDate]);
   return (
     <SafeAreaView className="flex-1 rounded-t-3xl bg-background">
       <View className="p-4">
@@ -129,20 +146,48 @@ export default function ChallengeScreen() {
               <Text className="text-start text-foreground text-md">
                 {data?.volume ? `${formatEther(data.volume)} EURØP` : 'No EURØP staked yet'}
               </Text>
+              {/* Proof */}
+              {(data?.status === 'ProofSubmitted' || data?.status === 'Completed') && (
+                <>
+                  <Text className="text-start text-foreground text-md font-bold">📄 Proof</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL(data.uri)}>
+                    <Text className="text-start text-primary underline">{data?.uri}</Text>
+                  </TouchableOpacity>
+                </>
+              )}
               {/* Time Left */}
-              <Text className="text-start text-foreground text-md font-bold">⏳ Time Left</Text>
-              <Text className="text-start text-foreground text-md">
-                {data?.expiration ? (
-                  <CountdownTimer expiration={data.expiration} />
-                ) : (
-                  'No expiration date set'
-                )}
-              </Text>
+              {data?.status === 'Active' && (
+                <>
+                  <Text className="text-start text-foreground text-md font-bold">⏳ Time Left</Text>
+                  <Text className="text-start text-foreground text-md">
+                    {data?.expiration ? (
+                      <CountdownTimer expiration={data.expiration} />
+                    ) : (
+                      'No expiration date set'
+                    )}
+                  </Text>
+                </>
+              )}
+              {/* Dispute Period */}
+              {disputeDate && data?.status === 'Active' && (
+                <>
+                  <Text className="text-start text-foreground text-md font-bold">
+                    ⏳ Dispute Time Left
+                  </Text>
+                  <Text className="text-start text-foreground text-md">
+                    <CountdownTimer expiration={disputeDate.toISOString()} />
+                  </Text>
+                </>
+              )}
             </View>
           )}
         </View>
         <View className="p-4 bottom-0">
-          {!account ? (
+          {data?.status === 'Completed' ? (
+            <Text className="text-foreground text-center font-medium">
+              This challenge was completed! 🎉
+            </Text>
+          ) : !account ? (
             <Text className="text-foreground text-sm text-center mt-2">
               Connect your wallet to stoke the challenge or submit proof if you&apos;re the
               Zharrior.
@@ -151,33 +196,35 @@ export default function ChallengeScreen() {
             <Text className="text-foreground text-center font-medium">
               This challenge is expired ⌛
             </Text>
+          ) : data?.status === 'Active' ? (
+            <Button
+              className="w-full"
+              variant="default"
+              onPress={() => {
+                if (role === 'zharrior') {
+                  setProofDialogOpen(true);
+                } else {
+                  setStokeDialogOpen(true);
+                }
+              }}>
+              <Text className="text-md text-black">
+                {role === 'zharrior' ? '🧾 Submit Proof' : '🪵 Stoke'}
+              </Text>
+            </Button>
           ) : (
-            <>
+            role === 'zharrior' &&
+            data?.status === 'ProofSubmitted' &&
+            isValid && (
               <Button
+                disabled={loading}
                 className="w-full"
                 variant="default"
-                onPress={() => {
-                  if (role === 'zharrior') {
-                    setProofDialogOpen(true);
-                  } else {
-                    setStokeDialogOpen(true);
-                  }
-                }}>
-                <Text className="text-md text-black">
-                  {role === 'zharrior' ? '🧾 Submit Proof' : '🪵 Stoke'}
-                </Text>
+                onPress={() => distributeRewards()}>
+                <Text className="text-md text-black">Claim</Text>
               </Button>
-              {role === 'zharrior' && data?.status === 'ProofSubmitted' && isValid && (
-                <Button
-                  disabled={loading}
-                  className="w-full"
-                  variant="default"
-                  onPress={() => distributeRewards()}>
-                  <Text className="text-md text-black">Claim</Text>
-                </Button>
-              )}
-            </>
+            )
           )}
+          {errorMessage && <Text className="text-red-500 text-center mt-2">{errorMessage}</Text>}
         </View>
       </ScrollView>
       <StokeDialog

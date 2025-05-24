@@ -46,6 +46,7 @@ export default function ActiveChallengesScreen() {
         expiresAt={new Date(item.expiration)}
         xp={item.volume}
         staked={item.volume}
+        status={item.status}
         type={type}
       />
     );

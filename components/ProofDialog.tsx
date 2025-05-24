@@ -1,8 +1,10 @@
 import { Colors } from '@/constants/Colors';
+import { zharChallengesContract } from '@/constants/thirdweb';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
+import { prepareContractCall, sendAndConfirmTransaction } from 'thirdweb';
 import { useActiveAccount } from 'thirdweb/react';
 import { ModalHeader } from './ModalHeader';
 import { Button } from './ui/button';
@@ -37,15 +39,24 @@ export default function ProofDialog({ onClose, open, challengeId }: Props) {
   }, [onClose]);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const submit = async () => {
+
+  const submit = async (proof: string) => {
     if (!account) {
       console.error('No account connected');
       return;
     }
     setLoading(true);
-
-    // TODO: Send the proof to the contract
-
+    const transaction = prepareContractCall({
+      contract: zharChallengesContract,
+      method: 'submitProof',
+      params: [BigInt(challengeId), proof],
+    });
+    console.log('Sending transaction to submit proof...');
+    const recipe = await sendAndConfirmTransaction({
+      transaction,
+      account,
+    });
+    console.log('Proof submitted successfully:', recipe);
     onClose();
     router.back();
     setLoading(false);
@@ -85,7 +96,7 @@ export default function ProofDialog({ onClose, open, challengeId }: Props) {
 
         {/* Submit Button */}
         <Button
-          onPress={() => submit()}
+          onPress={() => submit(proofLink)}
           variant="default"
           className="w-[70%]"
           disabled={loading || !proofLink.length}>
